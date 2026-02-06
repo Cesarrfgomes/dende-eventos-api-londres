@@ -12,8 +12,9 @@ public class Organizador {
     private String cnpj;
     private String razaoSocial;
     private String nomeFantasia;
+    private String senha;
 
-    public Organizador(String nome, LocalDate dataNascimento, String sexo, String email, String cnpj, String razaoSocial, String nomeFantasia) {
+    public Organizador(String nome, LocalDate dataNascimento, String sexo, String email, String cnpj, String razaoSocial, String nomeFantasia, String senha) {
         this.nome = nome;
         this.dataNascimento = dataNascimento;
         this.sexo = sexo;
@@ -21,6 +22,7 @@ public class Organizador {
         this.cnpj = cnpj;
         this.razaoSocial = razaoSocial;
         this.nomeFantasia = nomeFantasia;
+        this.senha = senha;
     }
 
     public Organizador() {
@@ -80,6 +82,10 @@ public class Organizador {
 
     public void setNomeFantasia(String nomeFantasia) {
         this.nomeFantasia = nomeFantasia;
+    }
+
+    public void setSenha(String senha){
+        this.senha = senha;
     }
 
     @Override
