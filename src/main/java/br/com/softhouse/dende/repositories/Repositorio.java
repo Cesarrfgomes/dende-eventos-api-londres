@@ -21,4 +21,12 @@ public class Repositorio {
         return instance;
     }
 
+    public void cadastrarOrganizador(Organizador organizador) {
+        this.organizadores.put(organizador.getEmail(), organizador);
+    }
+
+    public Organizador buscarOrganizadorPorEmail(String email) {
+        return organizadores.get(email);
+    }
+
 }
