@@ -6,21 +6,21 @@ import br.com.dende.softhouse.annotations.request.RequestBody;
 import br.com.dende.softhouse.annotations.request.RequestMapping;
 import br.com.dende.softhouse.process.route.ResponseEntity;
 import br.com.softhouse.dende.model.Organizador;
-import br.com.softhouse.dende.repositories.Repositorio;
+import br.com.softhouse.dende.repositories.OrganizadorRepositorio;
 
 @Controller
 @RequestMapping(path = "/organizadores")
 public class OrganizadorController {
 
-    private final Repositorio repositorio;
+    private final OrganizadorRepositorio organizadorRepositorio;
 
     public OrganizadorController() {
-        this.repositorio = Repositorio.getInstance();
+        this.organizadorRepositorio = OrganizadorRepositorio.getInstance();
     }
 
     @PostMapping
     public ResponseEntity<String> cadastrarOrganizador(@RequestBody Organizador organizador) {
-        Organizador organizadorExiste = repositorio.buscarOrganizadorPorEmail(organizador.getEmail());
+        Organizador organizadorExiste = this.organizadorRepositorio.buscarOrganizadorPorEmail(organizador.getEmail());
 
         if (organizadorExiste != null) {
             return ResponseEntity.status(400, "Um usuário com esse email já está cadastrado.");
@@ -28,13 +28,13 @@ public class OrganizadorController {
 
         if (
                 (organizador.getCnpj() != null && (organizador.getNomeFantasia() == null || organizador.getRazaoSocial() == null)) ||
-                (organizador.getNomeFantasia() != null && (organizador.getCnpj() == null || organizador.getRazaoSocial() == null)) ||
-                (organizador.getRazaoSocial() != null && (organizador.getNomeFantasia() == null || organizador.getCnpj() == null))
+                        (organizador.getNomeFantasia() != null && (organizador.getCnpj() == null || organizador.getRazaoSocial() == null)) ||
+                        (organizador.getRazaoSocial() != null && (organizador.getNomeFantasia() == null || organizador.getCnpj() == null))
         ) {
             return ResponseEntity.status(400, "Ao informar o CNPj, é necessário informar os campos: Nome Fantasia e Razão Social");
         }
 
-        repositorio.cadastrarOrganizador(organizador);
+        this.organizadorRepositorio.cadastrarOrganizador(organizador);
 
         return ResponseEntity.ok("Organizador cadastrado com sucesso.");
     }
