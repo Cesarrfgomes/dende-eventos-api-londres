@@ -7,6 +7,7 @@ import br.com.dende.softhouse.annotations.request.RequestBody;
 import br.com.dende.softhouse.annotations.request.RequestMapping;
 import br.com.dende.softhouse.annotations.request.PathVariable;
 import br.com.dende.softhouse.process.route.ResponseEntity;
+import br.com.softhouse.dende.model.Organizador;
 import br.com.softhouse.dende.model.Usuario;
 import br.com.softhouse.dende.repositories.Repositorio;
 
@@ -22,6 +23,15 @@ public class UsuarioController {
 
     @PostMapping
     public ResponseEntity<String> cadastroUsuario(@RequestBody Usuario usuario){
+
+        Usuario usuarioExiste = repositorio.buscarUsuarioPorEmail(usuario.getEmail());
+
+        if (usuarioExiste != null){
+            return ResponseEntity.status(400, "O email já está em uso por outro usuário");
+        }
+
+        repositorio.salvarUsuario(usuario);
+
         return ResponseEntity.ok("Usuario " + usuario.getEmail() + " registrado com sucesso!");
     }
 

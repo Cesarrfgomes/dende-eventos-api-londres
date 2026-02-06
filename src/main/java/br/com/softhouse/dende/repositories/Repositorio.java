@@ -4,6 +4,7 @@ import br.com.softhouse.dende.model.Organizador;
 import br.com.softhouse.dende.model.Usuario;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Repositorio {
@@ -21,4 +22,11 @@ public class Repositorio {
         return instance;
     }
 
+    public void salvarUsuario(Usuario usuario) {
+        this.usuariosComum.put(usuario.getEmail(), usuario);
+    }
+
+    public Usuario buscarUsuarioPorEmail(String email) {
+        return usuariosComum.get(email);
+    }
 }
