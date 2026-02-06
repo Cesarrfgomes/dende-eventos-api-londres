@@ -50,9 +50,9 @@ Este projeto depende do framework educacional:
 
 **Integrantes do Time:**
 
-1. ____________________________________
-2. ____________________________________
-3. ____________________________________
+1. César Filipe Gomes da Silva
+2. Rodrigo Souza Guimarães
+3. Lucas Ferreira Lan
 4. ____________________________________
 5. ____________________________________
 
