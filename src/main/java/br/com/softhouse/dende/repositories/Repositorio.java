@@ -29,4 +29,11 @@ public class Repositorio {
         return organizadores.get(email);
     }
 
+    public void salvarUsuario(Usuario usuario) {
+        this.usuariosComum.put(usuario.getEmail(), usuario);
+    }
+
+    public Usuario buscarUsuarioPorEmail(String email) {
+        return usuariosComum.get(email);
+    }
 }
