@@ -33,19 +33,19 @@ public class UsuarioController {
     }
 
     @PutMapping(path = "/{usuarioId}")
-    public ResponseEntity<String> alterarUsuario(@PathVariable(parameter = "usuarioId") long usuarioId, @RequestBody Usuario usuario) {
-        Usuario  usuarioExiste = this.usuarioRepositorio.buscarUsuarioPorId(usuarioId);
+    public ResponseEntity<String> atualizarUsuario(@PathVariable(parameter = "usuarioId") long usuarioId, @RequestBody Usuario usuario) {
+        Usuario usuarioExiste = this.usuarioRepositorio.buscarUsuarioPorId(usuarioId);
 
-        if(usuarioExiste == null) {
+        if (usuarioExiste == null) {
             return ResponseEntity.status(404, "Usuário não encontrado.");
         }
 
-        if (!Objects.equals(usuarioExiste.getEmail(), usuario.getEmail())){
+        if (!Objects.equals(usuarioExiste.getEmail(), usuario.getEmail())) {
             return ResponseEntity.status(400, "Não é permitido alterar o email do usuário.");
         }
 
         this.usuarioRepositorio.atualizarUsuario(usuarioExiste.getId(), usuario);
 
-        return ResponseEntity.ok("Usuario " + usuario.getEmail() + " do usuarioId = " + usuarioId + " alterado com sucesso!");
+        return ResponseEntity.status(204, null);
     }
 }
