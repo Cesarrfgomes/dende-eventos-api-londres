@@ -43,8 +43,6 @@ Este projeto depende do framework educacional:
 
 ## 👥 Equipe
 
-> Preencha esta seção com as informações do seu time
-
 **Nome da Equipe:**  
 
 
@@ -53,7 +51,7 @@ Este projeto depende do framework educacional:
 1. César Filipe Gomes da Silva
 2. Rodrigo Souza Guimarães
 3. Lucas Ferreira Lan
-4. ____________________________________
+4. Valnei Sousa
 5. ____________________________________
 
 ---
