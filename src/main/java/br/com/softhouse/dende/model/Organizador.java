@@ -5,6 +5,7 @@ import java.util.Objects;
 
 public class Organizador {
 
+    private Long id;
     private String nome;
     private LocalDate dataNascimento;
     private String sexo;
@@ -84,8 +85,16 @@ public class Organizador {
         this.nomeFantasia = nomeFantasia;
     }
 
-    public void setSenha(String senha){
+    public void setSenha(String senha) {
         this.senha = senha;
+    }
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override

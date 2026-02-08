@@ -1,12 +1,12 @@
 package br.com.softhouse.dende.controllers;
 
 import br.com.dende.softhouse.annotations.Controller;
-import br.com.dende.softhouse.annotations.request.PostMapping;
-import br.com.dende.softhouse.annotations.request.RequestBody;
-import br.com.dende.softhouse.annotations.request.RequestMapping;
+import br.com.dende.softhouse.annotations.request.*;
 import br.com.dende.softhouse.process.route.ResponseEntity;
 import br.com.softhouse.dende.model.Organizador;
 import br.com.softhouse.dende.repositories.OrganizadorRepositorio;
+
+import java.util.Objects;
 
 @Controller
 @RequestMapping(path = "/organizadores")
@@ -37,5 +37,20 @@ public class OrganizadorController {
         this.organizadorRepositorio.cadastrarOrganizador(organizador);
 
         return ResponseEntity.ok("Organizador cadastrado com sucesso.");
+    }
+
+    @PutMapping(path = "/{organizadorId}")
+    public ResponseEntity<String> atualizarOrganizador(@PathVariable(parameter = "organizadorId") Long organizadorId, @RequestBody Organizador organizador) {
+        Organizador organizadorExiste = this.organizadorRepositorio.buscarOrganizadorPorId(organizadorId);
+
+        if (organizadorExiste == null) {
+            return ResponseEntity.status(404, "Organizador não encontrado.");
+        }
+
+        if (!Objects.equals(organizadorExiste.getEmail(), organizador.getEmail())) {
+            return ResponseEntity.status(400, "Não é permitido alterar o email do usuário.");
+        }
+
+        return ResponseEntity.status(204, null);
     }
 }
