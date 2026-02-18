@@ -5,10 +5,12 @@ import java.util.Objects;
 
 public class Usuario {
 
+    private Long id;
     private String nome;
     private LocalDate dataNascimento;
     private String sexo;
     private String email;
+    private String senha;
 
     public Usuario(
             final String nome,
@@ -56,6 +58,22 @@ public class Usuario {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getSenha() {
+        return this.senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 
     @Override
