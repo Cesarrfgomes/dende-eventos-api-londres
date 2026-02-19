@@ -53,4 +53,22 @@ public class OrganizadorController {
 
         return ResponseEntity.status(204, null);
     }
+
+    @PutMapping(path = "/{organizadorId}")
+    public ResponseEntity<String> desativarOrganizador(@PathVariable(parameter = "organizadorId") long organizadorId) {
+        Organizador organizadorExiste = this.organizadorRepositorio.buscarOrganizadorPorId(organizadorId);
+
+        if (organizadorExiste == null) {
+            return ResponseEntity.status(404, "Usuário não encontrado.");
+        }
+
+        if(organizadorExiste.getHasEvento() == true) {
+            return ResponseEntity.status(404, "O organizador tem evento ativo ou em execução.");
+        }
+
+        organizadorExiste.setIsAtivo(false);
+
+        return ResponseEntity.status(200, null);
+
+    }
 }

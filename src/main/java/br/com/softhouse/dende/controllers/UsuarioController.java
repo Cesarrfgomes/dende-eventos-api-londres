@@ -48,4 +48,20 @@ public class UsuarioController {
 
         return ResponseEntity.status(204, null);
     }
+
+
+    @PutMapping(path = "/{usuarioId}")
+    public ResponseEntity<String> desativarUsuario(@PathVariable(parameter = "usuarioId") long usuarioId) {
+        Usuario usuarioExiste = this.usuarioRepositorio.buscarUsuarioPorId(usuarioId);
+
+        if (usuarioExiste == null) {
+            return ResponseEntity.status(404, "Usuário não encontrado.");
+        }
+
+        usuarioExiste.setIsAtivo(false);
+
+        return ResponseEntity.status(200, null);
+
+    }
+
 }
