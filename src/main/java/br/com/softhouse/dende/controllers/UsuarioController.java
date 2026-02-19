@@ -48,4 +48,16 @@ public class UsuarioController {
 
         return ResponseEntity.status(204, null);
     }
+
+    @GetMapping(path = "/{usuarioId}")
+    public ResponseEntity<Object> visualizarPerfil(@PathVariable(parameter = "usuarioId") long usuarioId) {
+        Usuario usuarioExiste = this.usuarioRepositorio.buscarUsuarioPorId(usuarioId);
+
+        if (usuarioExiste == null) {
+            return ResponseEntity.status(404, "Usuário não encontrado.");
+        }
+
+        return ResponseEntity.ok(usuarioExiste);
+    }
+
 }
