@@ -4,6 +4,7 @@ import br.com.dende.softhouse.annotations.Controller;
 import br.com.dende.softhouse.annotations.request.*;
 import br.com.dende.softhouse.process.route.ResponseEntity;
 import br.com.softhouse.dende.dto.ReativarUsuarioRequest;
+import br.com.softhouse.dende.dto.UsuarioPerfilResponse;
 import br.com.softhouse.dende.model.Usuario;
 import br.com.softhouse.dende.repositories.UsuarioRepositorio;
 
@@ -48,6 +49,19 @@ public class UsuarioController {
         this.usuarioRepositorio.atualizarUsuario(usuarioExiste.getId(), usuario);
 
         return ResponseEntity.status(204, null);
+    }
+  
+    @GetMapping(path = "/{usuarioId}")
+    public ResponseEntity<Object> visualizarPerfil(@PathVariable(parameter = "usuarioId") long usuarioId) {
+        Usuario usuarioExiste = this.usuarioRepositorio.buscarUsuarioPorId(usuarioId);
+
+        if (usuarioExiste == null) {
+            return ResponseEntity.status(404, "Usuário não encontrado.");
+        }
+
+        UsuarioPerfilResponse response = new UsuarioPerfilResponse(usuarioExiste);
+
+        return ResponseEntity.ok(response);
     }
 
     @PatchMapping(path = "/reativar")

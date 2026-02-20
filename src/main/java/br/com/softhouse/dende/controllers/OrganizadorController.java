@@ -4,6 +4,7 @@ import br.com.dende.softhouse.annotations.Controller;
 import br.com.dende.softhouse.annotations.request.*;
 import br.com.dende.softhouse.process.route.ResponseEntity;
 import br.com.softhouse.dende.dto.ReativarUsuarioRequest;
+import br.com.softhouse.dende.dto.OrganizadorPerfilResponse;
 import br.com.softhouse.dende.model.Organizador;
 import br.com.softhouse.dende.model.Usuario;
 import br.com.softhouse.dende.repositories.OrganizadorRepositorio;
@@ -54,6 +55,19 @@ public class OrganizadorController {
         }
 
         return ResponseEntity.status(204, null);
+    }
+  
+    @GetMapping(path = "/{organizadorId}")
+    public ResponseEntity<Object> visualizarPerfil(@PathVariable(parameter = "organizadorId") long organizadorId) {
+        Organizador organizadorExiste = this.organizadorRepositorio.buscarOrganizadorPorId(organizadorId);
+
+        if (organizadorExiste == null) {
+            return ResponseEntity.status(404, "Usuário não encontrado.");
+        }
+
+        OrganizadorPerfilResponse response = new OrganizadorPerfilResponse(organizadorExiste);
+
+        return ResponseEntity.ok(response);
     }
 
     @PatchMapping(path = "/reativar")

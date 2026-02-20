@@ -23,6 +23,7 @@ public class Usuario {
         this.dataNascimento = dataNascimento;
         this.sexo = sexo;
         this.email = email;
+        this.isAtivo = true;
     }
 
     public Usuario() {
