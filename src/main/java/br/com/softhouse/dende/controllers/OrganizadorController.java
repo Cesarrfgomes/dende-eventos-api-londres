@@ -3,6 +3,7 @@ package br.com.softhouse.dende.controllers;
 import br.com.dende.softhouse.annotations.Controller;
 import br.com.dende.softhouse.annotations.request.*;
 import br.com.dende.softhouse.process.route.ResponseEntity;
+import br.com.softhouse.dende.dto.ReativarUsuarioRequest;
 import br.com.softhouse.dende.dto.OrganizadorPerfilResponse;
 import br.com.softhouse.dende.model.Organizador;
 import br.com.softhouse.dende.model.Usuario;
@@ -68,22 +69,26 @@ public class OrganizadorController {
 
         return ResponseEntity.ok(response);
     }
-  
-    @PutMapping(path = "/{organizadorId}")
-    public ResponseEntity<String> desativarOrganizador(@PathVariable(parameter = "organizadorId") long organizadorId) {
-        Organizador organizadorExiste = this.organizadorRepositorio.buscarOrganizadorPorId(organizadorId);
+
+    @PatchMapping(path = "/reativar")
+    public ResponseEntity<String> reativarUsuario(@RequestBody ReativarUsuarioRequest request) {
+        Organizador organizadorExiste = this.organizadorRepositorio.buscarOrganizadorPorEmail(request.getEmail());
 
         if (organizadorExiste == null) {
             return ResponseEntity.status(404, "Usuário não encontrado.");
         }
 
-        if(organizadorExiste.getHasEvento() == true) {
-            return ResponseEntity.status(404, "O organizador tem evento ativo ou em execução.");
+        if (!organizadorExiste.getSenha().equals(request.getSenha())) {
+            return ResponseEntity.status(401, "Senha incorreta.");
         }
 
-        organizadorExiste.setIsAtivo(false);
+        if (organizadorExiste.getIsAtivo()) {
+            return ResponseEntity.status(400, "Usuário já está ativo.");
+        }
 
-        return ResponseEntity.status(200, null);
 
+        organizadorExiste.setIsAtivo(true);
+
+        return ResponseEntity.ok("Usuário reativado com sucesso.");
     }
 }

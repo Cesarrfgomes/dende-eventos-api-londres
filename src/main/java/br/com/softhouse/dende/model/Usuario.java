@@ -80,6 +80,8 @@ public class Usuario {
 
     public void setIsAtivo(Boolean isAtivo) { this.isAtivo = isAtivo; }
 
+    public Boolean getIsAtivo() { return this.isAtivo; }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
