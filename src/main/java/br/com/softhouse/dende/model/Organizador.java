@@ -108,7 +108,6 @@ public class Organizador {
     public void setIsAtivo(Boolean isAtivo) { this.isAtivo = isAtivo; }
 
     public Boolean getIsAtivo() { return this.isAtivo; }
-    public void setIsAtivo(Boolean isAtivo) { this.isAtivo = isAtivo; }
 
     public Boolean getHasEvento() {return this.hasEvento;}
 
