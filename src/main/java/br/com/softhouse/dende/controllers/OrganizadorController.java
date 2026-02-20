@@ -78,6 +78,12 @@ public class OrganizadorController {
             return ResponseEntity.status(404, "Usuário não encontrado.");
         }
 
+        if (request.getEmail() == null || request.getEmail().isBlank() ||
+                request.getSenha() == null || request.getSenha().isBlank()) {
+
+            return ResponseEntity.status(400, "Email e senha são obrigatórios.");
+        }
+
         if (!organizadorExiste.getSenha().equals(request.getSenha())) {
             return ResponseEntity.status(401, "Senha incorreta.");
         }
