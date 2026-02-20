@@ -14,6 +14,7 @@ public class Organizador {
     private String razaoSocial;
     private String nomeFantasia;
     private String senha;
+    private Boolean isAtivo;
 
     public Organizador(String nome, LocalDate dataNascimento, String sexo, String email, String cnpj, String razaoSocial, String nomeFantasia, String senha) {
         this.nome = nome;
@@ -96,6 +97,14 @@ public class Organizador {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public String getSenha() {
+        return this.senha;
+    }
+
+    public void setIsAtivo(Boolean isAtivo) { this.isAtivo = isAtivo; }
+
+    public Boolean getIsAtivo() { return this.isAtivo; }
 
     @Override
     public boolean equals(Object object) {

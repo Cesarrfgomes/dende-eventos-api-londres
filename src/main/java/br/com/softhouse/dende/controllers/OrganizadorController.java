@@ -3,7 +3,9 @@ package br.com.softhouse.dende.controllers;
 import br.com.dende.softhouse.annotations.Controller;
 import br.com.dende.softhouse.annotations.request.*;
 import br.com.dende.softhouse.process.route.ResponseEntity;
+import br.com.softhouse.dende.dto.ReativarUsuarioRequest;
 import br.com.softhouse.dende.model.Organizador;
+import br.com.softhouse.dende.model.Usuario;
 import br.com.softhouse.dende.repositories.OrganizadorRepositorio;
 
 import java.util.Objects;
@@ -52,5 +54,27 @@ public class OrganizadorController {
         }
 
         return ResponseEntity.status(204, null);
+    }
+
+    @PatchMapping(path = "/reativar")
+    public ResponseEntity<String> reativarUsuario(@RequestBody ReativarUsuarioRequest request) {
+        Organizador organizadorExiste = this.organizadorRepositorio.buscarOrganizadorPorEmail(request.getEmail());
+
+        if (organizadorExiste == null) {
+            return ResponseEntity.status(404, "Usuário não encontrado.");
+        }
+
+        if (!organizadorExiste.getSenha().equals(request.getSenha())) {
+            return ResponseEntity.status(401, "Senha incorreta.");
+        }
+
+        if (organizadorExiste.getIsAtivo()) {
+            return ResponseEntity.status(400, "Usuário já está ativo.");
+        }
+
+
+        organizadorExiste.setIsAtivo(true);
+
+        return ResponseEntity.ok("Usuário reativado com sucesso.");
     }
 }
