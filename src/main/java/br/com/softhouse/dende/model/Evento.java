@@ -1,6 +1,5 @@
 package br.com.softhouse.dende.model;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Evento {
@@ -15,19 +14,19 @@ public class Evento {
     private Double taxaCancelamento;
     private Integer capacidadeMaxima;
 
-    public Evento (){
+    public Evento() {
 
     }
 
-    public Evento (String nome,
-                   String paginaWeb,
-                   LocalDateTime dataInicio,
-                   LocalDateTime dataFim,
-                   TipoEvento tipoEvento,
-                   Evento eventoPrincipal,
-                   Double precoUnitarioIngresso,
-                   Double taxaCancelamento,
-                   Integer capacidadeMaxima){
+    public Evento(String nome,
+                  String paginaWeb,
+                  LocalDateTime dataInicio,
+                  LocalDateTime dataFim,
+                  TipoEvento tipoEvento,
+                  Evento eventoPrincipal,
+                  Double precoUnitarioIngresso,
+                  Double taxaCancelamento,
+                  Integer capacidadeMaxima) {
 
         this.nome = nome;
         this.paginaWeb = paginaWeb;
@@ -41,32 +40,85 @@ public class Evento {
 
     }
 
-    public String getNome(){return nome;}
-    public void setNome(String nome){this.nome = nome;}
+    public String getNome() {
+        return nome;
+    }
 
-    public String getPaginaWeb(){return paginaWeb;}
-    public void setPaginaWeb(String paginaWeb){this.paginaWeb = paginaWeb;}
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
-    public LocalDateTime getDataInicio(){return dataInicio;}
-    public void setDataInicio(LocalDateTime dataInicio){this.dataInicio =  dataInicio;}
+    public String getPaginaWeb() {
+        return paginaWeb;
+    }
 
-    public LocalDateTime getDataFim(){return dataFim;}
-    public void setDataFim(LocalDateTime dataFim){this.dataFim = dataFim;}
+    public void setPaginaWeb(String paginaWeb) {
+        this.paginaWeb = paginaWeb;
+    }
 
-    public TipoEvento getTipoEvento(){return tipoEvento;}
-    public void setTipoEvento(TipoEvento tipoEvento){this.tipoEvento = tipoEvento;}
+    public LocalDateTime getDataInicio() {
+        return dataInicio;
+    }
 
-    public Evento getEventoPrincipal(){return eventoPrincipal;}
-    public void setEventoPrincipal(Evento eventoPrincipal){this.eventoPrincipal = eventoPrincipal;}
+    public void setDataInicio(LocalDateTime dataInicio) {
+        this.dataInicio = dataInicio;
+    }
 
-    public Double getPrecoUnitarioIngresso(){return precoUnitarioIngresso;}
-    public void setPrecoUnitarioIngresso(Double precoUnitarioIngresso){this.precoUnitarioIngresso = precoUnitarioIngresso;}
+    public LocalDateTime getDataFim() {
+        return dataFim;
+    }
 
-    public Double getTaxaCancelamento(){return taxaCancelamento;}
-    public void setTaxaCancelamento(Double taxaCancelamento){this.taxaCancelamento = taxaCancelamento;}
+    public void setDataFim(LocalDateTime dataFim) {
+        this.dataFim = dataFim;
+    }
 
-    public Integer getCapacidadeMaxima(){return capacidadeMaxima;}
-    public void setCapacidadeMaxima(Integer capacidadeMaxima){this.capacidadeMaxima = capacidadeMaxima;}
+    public TipoEvento getTipoEvento() {
+        return tipoEvento;
+    }
+
+    public void setTipoEvento(TipoEvento tipoEvento) {
+        this.tipoEvento = tipoEvento;
+    }
+
+    public Evento getEventoPrincipal() {
+        return eventoPrincipal;
+    }
+
+    public void setEventoPrincipal(Evento eventoPrincipal) {
+        this.eventoPrincipal = eventoPrincipal;
+    }
+
+    public Double getPrecoUnitarioIngresso() {
+        return precoUnitarioIngresso;
+    }
+
+    public void setPrecoUnitarioIngresso(Double precoUnitarioIngresso) {
+        this.precoUnitarioIngresso = precoUnitarioIngresso;
+    }
+
+    public Double getTaxaCancelamento() {
+        return taxaCancelamento;
+    }
+
+    public void setTaxaCancelamento(Double taxaCancelamento) {
+        this.taxaCancelamento = taxaCancelamento;
+    }
+
+    public Integer getCapacidadeMaxima() {
+        return capacidadeMaxima;
+    }
+
+    public void setCapacidadeMaxima(Integer capacidadeMaxima) {
+        this.capacidadeMaxima = capacidadeMaxima;
+    }
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
 
 }
