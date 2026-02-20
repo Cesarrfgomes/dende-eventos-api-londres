@@ -11,6 +11,7 @@ public class Usuario {
     private String sexo;
     private String email;
     private String senha;
+    private Boolean isAtivo;
 
     public Usuario(
             final String nome,
@@ -22,6 +23,7 @@ public class Usuario {
         this.dataNascimento = dataNascimento;
         this.sexo = sexo;
         this.email = email;
+        this.isAtivo = true;
     }
 
     public Usuario() {
@@ -75,6 +77,8 @@ public class Usuario {
     public void setSenha(String senha) {
         this.senha = senha;
     }
+
+    public void setIsAtivo(Boolean isAtivo) { this.isAtivo = isAtivo; }
 
     @Override
     public boolean equals(Object object) {
