@@ -70,6 +70,28 @@ public class OrganizadorController {
         return ResponseEntity.ok(response);
     }
 
+    @PutMapping(path = "/{organizadorId}")
+    public ResponseEntity<String> desativarOrganizador(@PathVariable(parameter = "organizadorId") long organizadorId) {
+        Organizador organizadorExiste = this.organizadorRepositorio.buscarOrganizadorPorId(organizadorId);
+
+        if (organizadorExiste == null) {
+            return ResponseEntity.status(404, "Organizador não encontrado.");
+        }
+
+        if (Boolean.FALSE.equals(organizadorExiste.getIsAtivo())) {
+            return ResponseEntity.status(400, "Usuário já está inativo.");
+        }
+
+        if(Boolean.TRUE.equals(organizadorExiste.getHasEvento())) {
+            return ResponseEntity.status(400, "O organizador tem evento ativo ou em execução.");
+        }
+
+        organizadorExiste.setIsAtivo(false);
+
+        return ResponseEntity.status(204, null);
+
+    }
+
     @PatchMapping(path = "/reativar")
     public ResponseEntity<String> reativarUsuario(@RequestBody ReativarUsuarioRequest request) {
         Organizador organizadorExiste = this.organizadorRepositorio.buscarOrganizadorPorEmail(request.getEmail());

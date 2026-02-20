@@ -64,6 +64,24 @@ public class UsuarioController {
         return ResponseEntity.ok(response);
     }
 
+    @PutMapping(path = "/{usuarioId}/desativar")
+    public ResponseEntity<String> desativarUsuario(@PathVariable(parameter = "usuarioId") long usuarioId) {
+        Usuario usuarioExiste = this.usuarioRepositorio.buscarUsuarioPorId(usuarioId);
+
+        if (usuarioExiste == null) {
+            return ResponseEntity.status(404, "Usuário não encontrado.");
+        }
+
+        if (Boolean.FALSE.equals(usuarioExiste.getIsAtivo())) {
+            return ResponseEntity.status(400, "Usuário já está inativo.");
+        }
+
+        usuarioExiste.setIsAtivo(false);
+
+        return ResponseEntity.status(204, null);
+
+    }
+
     @PatchMapping(path = "/reativar")
     public ResponseEntity<String> reativarUsuario(@RequestBody ReativarUsuarioRequest request) {
         Usuario usuarioExiste = this.usuarioRepositorio.buscarUsuarioPorEmail(request.getEmail());
