@@ -105,10 +105,39 @@ public class OrganizadorController {
         }
 
 
-        this.eventoRepositorio.atualizarEvento(eventoId, evento);
+        this.eventoRepositorio.atualizarEvento(eventoId, eventoExiste);
 
         return ResponseEntity.status(204, null);
     }
+
+    @PatchMapping(path = "/{organizadorId}/eventos/{eventoId}/ativar")
+    public ResponseEntity<Object> ativarEvento(@PathVariable(parameter = "organizadorId") long organizadorId, @PathVariable(parameter = "eventoId") long eventoId) {
+        Evento evento = this.eventoRepositorio.buscarEventoPorId(eventoId);
+
+        if(evento == null){
+            return ResponseEntity.status(404, new Erro("Evento não encontrado."));
+        }
+
+        evento.setIsAtivo(true);
+        this.eventoRepositorio.atualizarEvento(eventoId, evento);
+
+        return ResponseEntity.ok(evento);
+    }
+
+    @PatchMapping(path = "/{organizadorId}/eventos/{eventoId}/desativar")
+    public ResponseEntity<Object> desativarEvento(@PathVariable(parameter = "organizadorId") long organizadorId, @PathVariable(parameter = "eventoId") long eventoId) {
+        Evento evento = this.eventoRepositorio.buscarEventoPorId(eventoId);
+
+        if(evento == null){
+            return ResponseEntity.status(404, new Erro("Evento não encontrado."));
+        }
+
+        evento.setIsAtivo(false);
+        this.eventoRepositorio.atualizarEvento(eventoId, evento);
+
+        return ResponseEntity.ok(evento);
+    }
+
 
     @PutMapping(path = "/{organizadorId}")
     public ResponseEntity<String> desativarOrganizador(@PathVariable(parameter = "organizadorId") long organizadorId) {

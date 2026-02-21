@@ -34,8 +34,8 @@ public class EventoRepositorio {
         return  evento;
     }
 
-    public void atualizarEvento(Long eventoId, AtualizarEventoRequest evento) {
-        this.eventos.replace(eventoId, evento.eventoPrincipal());
+    public void atualizarEvento(Long eventoId, Evento evento) {
+        this.eventos.replace(eventoId, evento);
     }
 
     public Evento buscarEventoPorId(Long eventoId) {
