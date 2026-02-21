@@ -7,6 +7,7 @@ import br.com.softhouse.dende.dto.AtualizarEventoRequest;
 import br.com.softhouse.dende.dto.Erro;
 import br.com.softhouse.dende.dto.ReativarUsuarioRequest;
 import br.com.softhouse.dende.dto.OrganizadorPerfilResponse;
+import br.com.softhouse.dende.model.Empresa;
 import br.com.softhouse.dende.model.Evento;
 import br.com.softhouse.dende.model.Organizador;
 import br.com.softhouse.dende.model.Usuario;
@@ -37,16 +38,16 @@ public class OrganizadorController {
         }
 
         if (
-                (organizador.getCnpj() != null && (organizador.getNomeFantasia() == null || organizador.getRazaoSocial() == null)) ||
-                        (organizador.getNomeFantasia() != null && (organizador.getCnpj() == null || organizador.getRazaoSocial() == null)) ||
-                        (organizador.getRazaoSocial() != null && (organizador.getNomeFantasia() == null || organizador.getCnpj() == null))
+                (organizador.getEmpresa().getCnpj() != null && (organizador.getEmpresa().getNomeFantasia() == null || organizador.getEmpresa().getRazaoSocial() == null)) ||
+                        (organizador.getEmpresa().getNomeFantasia() != null && (organizador.getEmpresa().getCnpj() == null || organizador.getEmpresa().getRazaoSocial() == null)) ||
+                        (organizador.getEmpresa().getRazaoSocial() != null && (organizador.getEmpresa().getNomeFantasia() == null || organizador.getEmpresa().getCnpj() == null))
         ) {
             return ResponseEntity.status(400, new Erro("Ao informar o CNPj, é necessário informar os campos: Nome Fantasia e Razão Social"));
         }
 
-        this.organizadorRepositorio.cadastrarOrganizador(organizador);
+        var novoOrganizador = this.organizadorRepositorio.cadastrarOrganizador(organizador);
 
-        return ResponseEntity.status(201, organizador);
+        return ResponseEntity.status(201, novoOrganizador);
     }
 
     @PutMapping(path = "/{organizadorId}")
@@ -139,7 +140,7 @@ public class OrganizadorController {
     }
 
 
-    @PutMapping(path = "/{organizadorId}")
+    @PutMapping(path = "/{organizadorId}/desativar")
     public ResponseEntity<String> desativarOrganizador(@PathVariable(parameter = "organizadorId") long organizadorId) {
         Organizador organizadorExiste = this.organizadorRepositorio.buscarOrganizadorPorId(organizadorId);
 

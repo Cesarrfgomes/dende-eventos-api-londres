@@ -1,5 +1,6 @@
 package br.com.softhouse.dende.dto;
 
+import br.com.softhouse.dende.model.Empresa;
 import br.com.softhouse.dende.model.Organizador;
 
 import java.time.LocalDate;
@@ -11,20 +12,17 @@ public class OrganizadorPerfilResponse {
     private final String email;
     private final LocalDate dataNascimento;
     private final String idade;
-
-    private final String cnpj;
-    private final String razaoSocial;
-    private final String nomeFantasia;
+    private final boolean isAtivo;
+    private final Empresa empresa;
 
     public OrganizadorPerfilResponse(Organizador organizador) {
         this.nome = organizador.getNome();
         this.email = organizador.getEmail();
         this.dataNascimento = organizador.getDataNascimento();
         this.idade = calcularIdade(organizador.getDataNascimento());
+        this.isAtivo = organizador.getIsAtivo();
 
-        this.cnpj = organizador.getCnpj();
-        this.razaoSocial = organizador.getRazaoSocial();
-        this.nomeFantasia = organizador.getNomeFantasia();
+        this.empresa = organizador.getEmpresa();
     }
 
     private String calcularIdade(LocalDate nascimento) {
@@ -47,9 +45,6 @@ public class OrganizadorPerfilResponse {
 
     public String getIdade() { return idade; }
 
-    public String getCnpj() { return cnpj; }
+    public  Empresa getEmpresa(){return empresa;}
 
-    public String getRazaoSocial() { return razaoSocial; }
-
-    public String getNomeFantasia() { return nomeFantasia; }
 }

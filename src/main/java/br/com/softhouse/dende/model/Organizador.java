@@ -10,21 +10,17 @@ public class Organizador {
     private LocalDate dataNascimento;
     private String sexo;
     private String email;
-    private String cnpj;
-    private String razaoSocial;
-    private String nomeFantasia;
+    private Empresa empresa;
     private String senha;
     private Boolean isAtivo;
     private Boolean hasEvento;
 
-    public Organizador(String nome, LocalDate dataNascimento, String sexo, String email, String cnpj, String razaoSocial, String nomeFantasia, String senha) {
+    public Organizador(String nome, LocalDate dataNascimento, String sexo, String email, Empresa empresa, String senha) {
         this.nome = nome;
         this.dataNascimento = dataNascimento;
         this.sexo = sexo;
         this.email = email;
-        this.cnpj = cnpj;
-        this.razaoSocial = razaoSocial;
-        this.nomeFantasia = nomeFantasia;
+        this.empresa = empresa;
         this.senha = senha;
         this.isAtivo = true;
         this.hasEvento = false;
@@ -65,29 +61,9 @@ public class Organizador {
         this.email = email;
     }
 
-    public String getCnpj() {
-        return cnpj;
-    }
+    public Empresa getEmpresa(){return empresa;}
 
-    public void setCnpj(String cnpj) {
-        this.cnpj = cnpj;
-    }
-
-    public String getRazaoSocial() {
-        return razaoSocial;
-    }
-
-    public void setRazaoSocial(String razaoSocial) {
-        this.razaoSocial = razaoSocial;
-    }
-
-    public String getNomeFantasia() {
-        return nomeFantasia;
-    }
-
-    public void setNomeFantasia(String nomeFantasia) {
-        this.nomeFantasia = nomeFantasia;
-    }
+    public void setempresa(Empresa empresa){this.empresa = empresa;}
 
     public void setSenha(String senha) {
         this.senha = senha;
@@ -116,12 +92,12 @@ public class Organizador {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         Organizador that = (Organizador) object;
-        return Objects.equals(nome, that.nome) && Objects.equals(dataNascimento, that.dataNascimento) && Objects.equals(sexo, that.sexo) && Objects.equals(email, that.email) && Objects.equals(cnpj, that.cnpj) && Objects.equals(razaoSocial, that.razaoSocial) && Objects.equals(nomeFantasia, that.nomeFantasia);
+        return Objects.equals(nome, that.nome) && Objects.equals(dataNascimento, that.dataNascimento) && Objects.equals(sexo, that.sexo) && Objects.equals(email, that.email) && Objects.equals(empresa, that.empresa);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(nome, dataNascimento, sexo, email, cnpj, razaoSocial, nomeFantasia);
+        return Objects.hash(nome, dataNascimento, sexo, email, empresa);
     }
 
     @Override
@@ -131,9 +107,7 @@ public class Organizador {
                 ", dataNascimento=" + dataNascimento +
                 ", sexo='" + sexo + '\'' +
                 ", email='" + email + '\'' +
-                ", cnpj='" + cnpj + '\'' +
-                ", razaoSocial='" + razaoSocial + '\'' +
-                ", nomeFantasia='" + nomeFantasia + '\'' +
+                ", empresa='" + empresa + '\'' +
                 '}';
     }
 }
