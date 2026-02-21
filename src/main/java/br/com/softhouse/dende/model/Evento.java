@@ -15,9 +15,12 @@ public class Evento {
     private Double precoUnitarioIngresso;
     private Double taxaCancelamento;
     private Integer capacidadeMaxima;
+    private Integer ingressosVendidos = 0;
     private Boolean isAtivo;
 
     public Evento() {
+        this.isAtivo = true;
+        this.ingressosVendidos = 0;
     }
 
     public Evento(String nome,
@@ -29,6 +32,7 @@ public class Evento {
                   Evento eventoPrincipal,
                   Double precoUnitarioIngresso,
                   Double taxaCancelamento,
+                  Integer ingressosVendidos,
                   Integer capacidadeMaxima) {
 
         this.nome = nome;
@@ -42,6 +46,7 @@ public class Evento {
         this.precoUnitarioIngresso = precoUnitarioIngresso;
         this.taxaCancelamento = taxaCancelamento;
         this.capacidadeMaxima = capacidadeMaxima;
+        this.ingressosVendidos = ingressosVendidos;
         this.isAtivo = true;
     }
 
@@ -120,6 +125,10 @@ public class Evento {
     public void setCapacidadeMaxima(Integer capacidadeMaxima) {
         this.capacidadeMaxima = capacidadeMaxima;
     }
+
+    public Integer getIngressosVendidos() { return ingressosVendidos; }
+
+    public void setIngressosVendidos(Integer ingressosVendidos) { this.ingressosVendidos = ingressosVendidos; }
 
     public Long getId() {
         return this.id;
