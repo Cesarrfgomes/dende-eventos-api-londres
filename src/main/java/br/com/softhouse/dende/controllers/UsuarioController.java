@@ -3,6 +3,7 @@ package br.com.softhouse.dende.controllers;
 import br.com.dende.softhouse.annotations.Controller;
 import br.com.dende.softhouse.annotations.request.*;
 import br.com.dende.softhouse.process.route.ResponseEntity;
+import br.com.softhouse.dende.dto.Erro;
 import br.com.softhouse.dende.dto.ReativarUsuarioRequest;
 import br.com.softhouse.dende.dto.UsuarioPerfilResponse;
 import br.com.softhouse.dende.model.Usuario;
@@ -21,12 +22,12 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<String> cadastroUsuario(@RequestBody Usuario usuario) {
+    public ResponseEntity<Object> cadastroUsuario(@RequestBody Usuario usuario) {
 
         Usuario usuarioExiste = this.usuarioRepositorio.buscarUsuarioPorEmail(usuario.getEmail());
 
         if (usuarioExiste != null) {
-            return ResponseEntity.status(400, "O email já está em uso por outro usuário");
+            return ResponseEntity.status(400, new Erro("O email já está em uso por outro usuário"));
         }
 
         Usuario novoUsuario = this.usuarioRepositorio.cadastrarUsuario(usuario);
@@ -35,15 +36,15 @@ public class UsuarioController {
     }
 
     @PutMapping(path = "/{usuarioId}")
-    public ResponseEntity<String> atualizarUsuario(@PathVariable(parameter = "usuarioId") long usuarioId, @RequestBody Usuario usuario) {
+    public ResponseEntity<Object> atualizarUsuario(@PathVariable(parameter = "usuarioId") long usuarioId, @RequestBody Usuario usuario) {
         Usuario usuarioExiste = this.usuarioRepositorio.buscarUsuarioPorId(usuarioId);
 
         if (usuarioExiste == null) {
-            return ResponseEntity.status(404, "Usuário não encontrado.");
+            return ResponseEntity.status(404, new Erro("Usuário não encontrado."));
         }
 
         if (!Objects.equals(usuarioExiste.getEmail(), usuario.getEmail())) {
-            return ResponseEntity.status(400, "Não é permitido alterar o email do usuário.");
+            return ResponseEntity.status(400, new Erro("Não é permitido alterar o email do usuário."));
         }
 
         this.usuarioRepositorio.atualizarUsuario(usuarioExiste.getId(), usuario);
@@ -56,7 +57,7 @@ public class UsuarioController {
         Usuario usuarioExiste = this.usuarioRepositorio.buscarUsuarioPorId(usuarioId);
 
         if (usuarioExiste == null) {
-            return ResponseEntity.status(404, "Usuário não encontrado.");
+            return ResponseEntity.status(404, new Erro("Usuário não encontrado."));
         }
 
         UsuarioPerfilResponse response = new UsuarioPerfilResponse(usuarioExiste);

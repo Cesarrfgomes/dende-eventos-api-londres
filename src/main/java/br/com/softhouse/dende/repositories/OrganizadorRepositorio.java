@@ -24,12 +24,14 @@ public class OrganizadorRepositorio {
         return organizadores.get(id);
     }
 
-    public void cadastrarOrganizador(Organizador organizador) {
+    public Organizador cadastrarOrganizador(Organizador organizador) {
         if (organizador.getId() == null) {
             organizador.setId(this.contadorId);
             this.contadorId++;
         }
         this.organizadores.put(organizador.getId(), organizador);
+
+        return  organizador;
     }
 
     public Organizador atualizarOrganizador(Long organizadorId, Organizador organizador) {
