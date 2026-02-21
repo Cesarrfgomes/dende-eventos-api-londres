@@ -9,20 +9,21 @@ public class Evento {
     private LocalDateTime dataInicio;
     private LocalDateTime dataFim;
     private TipoEvento tipoEvento;
+    private long organizadorId;
     private Evento eventoPrincipal;
     private Double precoUnitarioIngresso;
     private Double taxaCancelamento;
     private Integer capacidadeMaxima;
+    private Boolean isAtivo;
 
     public Evento() {
-
     }
 
     public Evento(String nome,
                   String paginaWeb,
                   LocalDateTime dataInicio,
                   LocalDateTime dataFim,
-                  TipoEvento tipoEvento,
+                  TipoEvento tipoEvento, long organizadorId,
                   Evento eventoPrincipal,
                   Double precoUnitarioIngresso,
                   Double taxaCancelamento,
@@ -33,11 +34,12 @@ public class Evento {
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
         this.tipoEvento = tipoEvento;
+        this.organizadorId = organizadorId;
         this.eventoPrincipal = eventoPrincipal;
         this.precoUnitarioIngresso = precoUnitarioIngresso;
         this.taxaCancelamento = taxaCancelamento;
         this.capacidadeMaxima = capacidadeMaxima;
-
+        this.isAtivo = true;
     }
 
     public String getNome() {
@@ -120,5 +122,19 @@ public class Evento {
         this.id = id;
     }
 
+    public Boolean getIsAtivo() {
+        return this.isAtivo;
+    }
 
+    public void setIsAtivo(Boolean isAtivo) {
+        this.isAtivo = isAtivo;
+    }
+
+    public long getOrganizadorId() {
+        return organizadorId;
+    }
+
+    public void setOrganizadorId(long organizadorId) {
+        this.organizadorId = organizadorId;
+    }
 }

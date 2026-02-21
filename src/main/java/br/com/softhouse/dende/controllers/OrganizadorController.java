@@ -3,6 +3,7 @@ package br.com.softhouse.dende.controllers;
 import br.com.dende.softhouse.annotations.Controller;
 import br.com.dende.softhouse.annotations.request.*;
 import br.com.dende.softhouse.process.route.ResponseEntity;
+import br.com.softhouse.dende.dto.AtualizarEventoRequest;
 import br.com.softhouse.dende.dto.Erro;
 import br.com.softhouse.dende.dto.ReativarUsuarioRequest;
 import br.com.softhouse.dende.dto.OrganizadorPerfilResponse;
@@ -84,9 +85,29 @@ public class OrganizadorController {
             return ResponseEntity.status(404, new Erro("Organizador não encontrado."));
         }
 
+        evento.setOrganizadorId(organizadorId);
+
         Evento novoEnvento = this.eventoRepositorio.cadastrarEvento(evento);
 
         return ResponseEntity.status(201, novoEnvento);
+    }
+
+    @PutMapping(path = "/{organizadorId}/eventos/{eventoId}")
+    public ResponseEntity<Object> atualizarEvento(@PathVariable(parameter = "organizadorId") long organizadorId, @PathVariable(parameter = "eventoId") long  eventoId, @RequestBody AtualizarEventoRequest evento) {
+        Evento eventoExiste = this.eventoRepositorio.buscarEventoPorId(eventoId);
+
+        if (eventoExiste == null) {
+            return ResponseEntity.status(404, new Erro("Evento não encontrado."));
+        }
+
+        if(eventoExiste.getOrganizadorId() != organizadorId){
+            return ResponseEntity.status(401, new Erro("Usuário sem permissão para alterar o evento."));
+        }
+
+
+        this.eventoRepositorio.atualizarEvento(eventoId, evento);
+
+        return ResponseEntity.status(204, null);
     }
 
     @PutMapping(path = "/{organizadorId}")
