@@ -1,6 +1,8 @@
 package br.com.softhouse.dende.repositories;
 
+import br.com.softhouse.dende.dto.AtualizarEventoRequest;
 import br.com.softhouse.dende.model.Evento;
+import br.com.softhouse.dende.model.Organizador;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,5 +32,13 @@ public class EventoRepositorio {
         eventos.put(evento.getId(), evento);
 
         return  evento;
+    }
+
+    public void atualizarEvento(Long eventoId, Evento evento) {
+        this.eventos.replace(eventoId, evento);
+    }
+
+    public Evento buscarEventoPorId(Long eventoId) {
+        return this.eventos.get(eventoId);
     }
 }
