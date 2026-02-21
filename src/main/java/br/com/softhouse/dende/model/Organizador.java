@@ -101,7 +101,13 @@ public class Organizador {
         this.id = id;
     }
 
+    public String getSenha() {
+        return this.senha;
+    }
+
     public void setIsAtivo(Boolean isAtivo) { this.isAtivo = isAtivo; }
+
+    public Boolean getIsAtivo() { return this.isAtivo; }
 
     public Boolean getHasEvento() {return this.hasEvento;}
 

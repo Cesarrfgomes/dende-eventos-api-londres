@@ -4,6 +4,7 @@ import br.com.dende.softhouse.annotations.Controller;
 import br.com.dende.softhouse.annotations.request.*;
 import br.com.dende.softhouse.process.route.ResponseEntity;
 import br.com.softhouse.dende.dto.Erro;
+import br.com.softhouse.dende.dto.ReativarUsuarioRequest;
 import br.com.softhouse.dende.dto.OrganizadorPerfilResponse;
 import br.com.softhouse.dende.model.Evento;
 import br.com.softhouse.dende.model.Organizador;
@@ -61,7 +62,7 @@ public class OrganizadorController {
 
         return ResponseEntity.status(204, null);
     }
-
+  
     @GetMapping(path = "/{organizadorId}")
     public ResponseEntity<Object> visualizarPerfil(@PathVariable(parameter = "organizadorId") long organizadorId) {
         Organizador organizadorExiste = this.organizadorRepositorio.buscarOrganizadorPorId(organizadorId);
@@ -88,4 +89,53 @@ public class OrganizadorController {
         return ResponseEntity.status(201, novoEnvento);
     }
 
+    @PutMapping(path = "/{organizadorId}")
+    public ResponseEntity<String> desativarOrganizador(@PathVariable(parameter = "organizadorId") long organizadorId) {
+        Organizador organizadorExiste = this.organizadorRepositorio.buscarOrganizadorPorId(organizadorId);
+
+        if (organizadorExiste == null) {
+            return ResponseEntity.status(404, "Organizador não encontrado.");
+        }
+
+        if (Boolean.FALSE.equals(organizadorExiste.getIsAtivo())) {
+            return ResponseEntity.status(400, "Usuário já está inativo.");
+        }
+
+        if(Boolean.TRUE.equals(organizadorExiste.getHasEvento())) {
+            return ResponseEntity.status(400, "O organizador tem evento ativo ou em execução.");
+        }
+
+        organizadorExiste.setIsAtivo(false);
+
+        return ResponseEntity.status(204, null);
+
+    }
+
+    @PatchMapping(path = "/reativar")
+    public ResponseEntity<String> reativarOrganizador(@RequestBody ReativarUsuarioRequest request) {
+        Organizador organizadorExiste = this.organizadorRepositorio.buscarOrganizadorPorEmail(request.getEmail());
+
+        if (organizadorExiste == null) {
+            return ResponseEntity.status(404, "Usuário não encontrado.");
+        }
+
+        if (request.getEmail() == null || request.getEmail().isBlank() ||
+                request.getSenha() == null || request.getSenha().isBlank()) {
+
+            return ResponseEntity.status(400, "Email e senha são obrigatórios.");
+        }
+
+        if (!organizadorExiste.getSenha().equals(request.getSenha())) {
+            return ResponseEntity.status(401, "Senha incorreta.");
+        }
+
+        if (organizadorExiste.getIsAtivo()) {
+            return ResponseEntity.status(400, "Usuário já está ativo.");
+        }
+
+
+        organizadorExiste.setIsAtivo(true);
+
+        return ResponseEntity.ok("Usuário reativado com sucesso.");
+    }
 }
