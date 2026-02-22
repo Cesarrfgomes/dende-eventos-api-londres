@@ -1,8 +1,7 @@
 package br.com.softhouse.dende.repositories;
 
-import br.com.softhouse.dende.dto.AtualizarEventoRequest;
+import br.com.softhouse.dende.exceptions.NotFoundException;
 import br.com.softhouse.dende.model.Evento;
-import br.com.softhouse.dende.model.Organizador;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -64,6 +63,12 @@ public class EventoRepositorio {
     }
 
     public Evento buscarEventoPorId(Long eventoId) {
-        return this.eventos.get(eventoId);
+        var evento =  this.eventos.get(eventoId);
+
+        if (evento == null) {
+            throw new NotFoundException("Evento não encontrado");
+        }
+
+        return  evento;
     }
 }

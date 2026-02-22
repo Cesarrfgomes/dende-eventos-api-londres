@@ -3,10 +3,11 @@ package br.com.softhouse.dende.controllers;
 import br.com.dende.softhouse.annotations.Controller;
 import br.com.dende.softhouse.annotations.request.*;
 import br.com.dende.softhouse.process.route.ResponseEntity;
-import br.com.softhouse.dende.dto.Erro;
-import br.com.softhouse.dende.dto.EventoListagemResponse;
-import br.com.softhouse.dende.dto.ReativarUsuarioRequest;
-import br.com.softhouse.dende.dto.UsuarioPerfilResponse;
+import br.com.softhouse.dende.dto.ErroDTO;
+import br.com.softhouse.dende.dto.EventoListagemResponseDTO;
+import br.com.softhouse.dende.dto.ReativarUsuarioRequestDTO;
+import br.com.softhouse.dende.dto.UsuarioPerfilResponseDTO;
+import br.com.softhouse.dende.exceptions.NotFoundException;
 import br.com.softhouse.dende.model.Evento;
 import br.com.softhouse.dende.model.Usuario;
 import br.com.softhouse.dende.repositories.EventoRepositorio;
@@ -34,7 +35,7 @@ public class UsuarioController {
         Usuario usuarioExiste = this.usuarioRepositorio.buscarUsuarioPorEmail(usuario.getEmail());
 
         if (usuarioExiste != null) {
-            return ResponseEntity.status(400, new Erro("O email já está em uso por outro usuário"));
+            return ResponseEntity.status(400, new ErroDTO("O email já está em uso por outro usuário"));
         }
 
         Usuario novoUsuario = this.usuarioRepositorio.cadastrarUsuario(usuario);
@@ -47,11 +48,11 @@ public class UsuarioController {
         Usuario usuarioExiste = this.usuarioRepositorio.buscarUsuarioPorId(usuarioId);
 
         if (usuarioExiste == null) {
-            return ResponseEntity.status(404, new Erro("Usuário não encontrado."));
+            return ResponseEntity.status(404, new ErroDTO("Usuário não encontrado."));
         }
 
         if (!Objects.equals(usuarioExiste.getEmail(), usuario.getEmail())) {
-            return ResponseEntity.status(400, new Erro("Não é permitido alterar o email do usuário."));
+            return ResponseEntity.status(400, new ErroDTO("Não é permitido alterar o email do usuário."));
         }
 
         this.usuarioRepositorio.atualizarUsuario(usuarioExiste.getId(), usuario);
@@ -64,47 +65,49 @@ public class UsuarioController {
         Usuario usuarioExiste = this.usuarioRepositorio.buscarUsuarioPorId(usuarioId);
 
         if (usuarioExiste == null) {
-            return ResponseEntity.status(404, new Erro("Usuário não encontrado."));
+            return ResponseEntity.status(404, new ErroDTO("Usuário não encontrado."));
         }
 
-        UsuarioPerfilResponse response = new UsuarioPerfilResponse(usuarioExiste);
+        UsuarioPerfilResponseDTO response = new UsuarioPerfilResponseDTO(usuarioExiste);
 
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping(path = "/{usuarioId}/desativar")
+    @PatchMapping(path = "/{usuarioId}/desativar")
     public ResponseEntity<String> desativarUsuario(@PathVariable(parameter = "usuarioId") long usuarioId) {
-        Usuario usuarioExiste = this.usuarioRepositorio.buscarUsuarioPorId(usuarioId);
 
-        if (usuarioExiste == null) {
-            return ResponseEntity.status(404, "Usuário não encontrado.");
+        try {
+            Usuario usuarioExiste = this.usuarioRepositorio.buscarUsuarioPorId(usuarioId);
+
+            if (Boolean.FALSE.equals(usuarioExiste.getIsAtivo())) {
+                return ResponseEntity.status(400, "Usuário já está inativo.");
+            }
+
+            usuarioExiste.setIsAtivo(false);
+
+            return ResponseEntity.status(204, null);
+        }catch (NotFoundException e) {
+            return ResponseEntity.status(404, e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500, e.getMessage());
         }
-
-        if (Boolean.FALSE.equals(usuarioExiste.getIsAtivo())) {
-            return ResponseEntity.status(400, "Usuário já está inativo.");
-        }
-
-        usuarioExiste.setIsAtivo(false);
-
-        return ResponseEntity.status(204, null);
-
     }
 
     @PatchMapping(path = "/reativar")
-    public ResponseEntity<String> reativarUsuario(@RequestBody ReativarUsuarioRequest request) {
-        Usuario usuarioExiste = this.usuarioRepositorio.buscarUsuarioPorEmail(request.getEmail());
+    public ResponseEntity<String> reativarUsuario(@RequestBody ReativarUsuarioRequestDTO request) {
+        Usuario usuarioExiste = this.usuarioRepositorio.buscarUsuarioPorEmail(request.email());
 
         if (usuarioExiste == null) {
             return ResponseEntity.status(404, "Usuário não encontrado.");
         }
 
-        if (request.getEmail() == null || request.getEmail().isBlank() ||
-                request.getSenha() == null || request.getSenha().isBlank()) {
+        if (request.email() == null || request.email().isBlank() ||
+                request.senha() == null || request.senha().isBlank()) {
 
             return ResponseEntity.status(400, "Email e senha são obrigatórios.");
         }
 
-        if (!usuarioExiste.getSenha().equals(request.getSenha())) {
+        if (!usuarioExiste.getSenha().equals(request.senha())) {
             return ResponseEntity.status(401, "Senha incorreta.");
         }
 
@@ -124,13 +127,13 @@ public class UsuarioController {
         Usuario usuarioExiste = this.usuarioRepositorio.buscarUsuarioPorId(usuarioId);
 
         if (usuarioExiste == null) {
-            return ResponseEntity.status(404, new Erro("Usuário não encontrado."));
+            return ResponseEntity.status(404, new ErroDTO("Usuário não encontrado."));
         }
 
         List<Evento> eventosDisponiveis = this.eventoRepositorio.buscarFeedEventos();
 
-        List<EventoListagemResponse> response = eventosDisponiveis.stream()
-                .map(EventoListagemResponse::new)
+        List<EventoListagemResponseDTO> response = eventosDisponiveis.stream()
+                .map(EventoListagemResponseDTO.class::cast)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(response);
