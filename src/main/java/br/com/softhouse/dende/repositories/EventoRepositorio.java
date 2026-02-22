@@ -4,6 +4,8 @@ import br.com.softhouse.dende.dto.AtualizarEventoRequest;
 import br.com.softhouse.dende.model.Evento;
 import br.com.softhouse.dende.model.Organizador;
 
+import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +41,21 @@ public class EventoRepositorio {
     public List<Evento> buscarEventosPorOrganizador(Long organizadorId) {
         return this.eventos.values().stream()
                 .filter(evento -> evento.getOrganizadorId() == organizadorId)
+                .collect(Collectors.toList());
+    }
+
+    public List<Evento> buscarFeedEventos() {
+        LocalDateTime agora = LocalDateTime.now();
+        return this.eventos.values().stream()
+                .filter(evento -> Boolean.TRUE.equals(evento.getIsAtivo()))
+                .filter(evento -> evento.getDataFim() != null && evento.getDataFim().isAfter(agora))
+                .filter(evento -> {
+                    int vendidos = (evento.getIngressosVendidos() != null) ? evento.getIngressosVendidos() : 0;
+                    int capacidade = (evento.getCapacidadeMaxima() != null) ? evento.getCapacidadeMaxima() : 0;
+                    return vendidos < capacidade;
+                })
+
+                .sorted(Comparator.comparing(Evento::getDataInicio).thenComparing(Evento::getNome))
                 .collect(Collectors.toList());
     }
 

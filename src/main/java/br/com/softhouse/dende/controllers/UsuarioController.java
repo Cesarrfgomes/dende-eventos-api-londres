@@ -4,21 +4,28 @@ import br.com.dende.softhouse.annotations.Controller;
 import br.com.dende.softhouse.annotations.request.*;
 import br.com.dende.softhouse.process.route.ResponseEntity;
 import br.com.softhouse.dende.dto.Erro;
+import br.com.softhouse.dende.dto.EventoListagemResponse;
 import br.com.softhouse.dende.dto.ReativarUsuarioRequest;
 import br.com.softhouse.dende.dto.UsuarioPerfilResponse;
+import br.com.softhouse.dende.model.Evento;
 import br.com.softhouse.dende.model.Usuario;
+import br.com.softhouse.dende.repositories.EventoRepositorio;
 import br.com.softhouse.dende.repositories.UsuarioRepositorio;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping(path = "/usuarios")
 public class UsuarioController {
 
     private final UsuarioRepositorio usuarioRepositorio;
+    private final EventoRepositorio eventoRepositorio;
 
     public UsuarioController() {
         this.usuarioRepositorio = UsuarioRepositorio.getInstance();
+        this.eventoRepositorio = EventoRepositorio.getInstance();
     }
 
     @PostMapping
@@ -109,5 +116,23 @@ public class UsuarioController {
         usuarioExiste.setIsAtivo(true);
 
         return ResponseEntity.ok("Usuário reativado com sucesso.");
+    }
+
+    @GetMapping(path = "/{usuarioId}/feed")
+    public ResponseEntity<Object> visualizarFeedEventos(@PathVariable(parameter = "usuarioId") long usuarioId) {
+
+        Usuario usuarioExiste = this.usuarioRepositorio.buscarUsuarioPorId(usuarioId);
+
+        if (usuarioExiste == null) {
+            return ResponseEntity.status(404, new Erro("Usuário não encontrado."));
+        }
+
+        List<Evento> eventosDisponiveis = this.eventoRepositorio.buscarFeedEventos();
+
+        List<EventoListagemResponse> response = eventosDisponiveis.stream()
+                .map(EventoListagemResponse::new)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(response);
     }
 }
