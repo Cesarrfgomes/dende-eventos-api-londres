@@ -17,3 +17,10 @@ public class IngressoRepositorio {
         return ingressos;
     }
 }
+
+public Ingresso buscarPorId(Long id) {
+    return ingressos.stream()
+            .filter(i -> i.getId().equals(id))
+            .findFirst()
+            .orElse(null);
+}
