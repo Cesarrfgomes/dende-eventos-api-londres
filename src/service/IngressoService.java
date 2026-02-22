@@ -68,3 +68,35 @@ public class IngressoService {
         return new CompraIngressoResponse(valorTotal, ingressosGerados);
     }
 }
+
+public CancelarIngressoResponse cancelar(CancelarIngressoRequest request) {
+
+    Ingresso ingresso = ingressoRepositorio.buscarPorId(request.getIngressoId());
+
+    if (ingresso == null) {
+        throw new RuntimeException("Ingresso não encontrado.");
+    }
+
+    if (!ingresso.isAtivo()) {
+        throw new RuntimeException("Ingresso já cancelado.");
+    }
+
+    Evento evento = ingresso.getEvento();
+
+    // 1️⃣ Cancelar ingresso
+    ingresso.cancelar();
+
+    // 2️⃣ Liberar vaga no evento
+    evento.setQuantidadeIngressosDisponiveis(
+            evento.getQuantidadeIngressosDisponiveis() + 1
+    );
+
+    // 3️⃣ Regra de estorno (simples)
+    double valorEstorno = ingresso.getValorPago();
+
+    return new CancelarIngressoResponse(
+            ingresso.getId(),
+            valorEstorno,
+            "CANCELADO"
+    );
+}
