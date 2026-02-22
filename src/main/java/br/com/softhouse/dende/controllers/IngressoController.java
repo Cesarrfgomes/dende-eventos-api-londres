@@ -10,13 +10,16 @@ public class IngressoController {
 
     private IngressoService ingressoService = new IngressoService();
 
-    // História 1 - Comprar Ingresso
+
     public CompraIngressoResponse comprarIngresso(CompraIngressoRequest request) {
         return ingressoService.comprar(request);
     }
 
-    // História 2 - Cancelar Ingresso
+
     public CancelarIngressoResponse cancelarIngresso(CancelarIngressoRequest request) {
         return ingressoService.cancelar(request);
     }
+}
+public List<ListarIngressosResponse> listarPorUsuario(Long usuarioId) {
+    return ingressoService.listarIngressosPorUsuario(usuarioId);
 }
