@@ -17,6 +17,9 @@ public class Evento {
     private Integer capacidadeMaxima;
     private Integer ingressosVendidos = 0;
     private Boolean isAtivo;
+    private Evento eventoVinculado;
+    private int quantidadeIngressosDisponiveis;
+    private double valorIngresso;
 
     public Evento() {
         this.isAtivo = true;
