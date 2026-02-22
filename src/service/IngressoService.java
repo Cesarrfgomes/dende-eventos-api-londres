@@ -7,6 +7,8 @@ import br.com.softhouse.dende.repository.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Comparator;
+import java.util.stream.Collectors;
 
 public class IngressoService {
 
@@ -30,7 +32,7 @@ public class IngressoService {
         double valorTotal = 0;
         List<Long> ingressosGerados = new ArrayList<>();
 
-        // 🎟️ Ingresso principal
+
         Ingresso ingressoPrincipal = new Ingresso();
         ingressoPrincipal.setUsuario(usuario);
         ingressoPrincipal.setEvento(evento);
@@ -47,7 +49,7 @@ public class IngressoService {
         valorTotal += evento.getValorIngresso();
         ingressosGerados.add(ingressoPrincipal.getId());
 
-        // 🔗 Evento vinculado
+    
         if (evento.getEventoVinculado() != null) {
 
             Evento vinculado = evento.getEventoVinculado();
@@ -83,15 +85,15 @@ public CancelarIngressoResponse cancelar(CancelarIngressoRequest request) {
 
     Evento evento = ingresso.getEvento();
 
-    // 1️⃣ Cancelar ingresso
+
     ingresso.cancelar();
 
-    // 2️⃣ Liberar vaga no evento
+ 
     evento.setQuantidadeIngressosDisponiveis(
             evento.getQuantidadeIngressosDisponiveis() + 1
     );
 
-    // 3️⃣ Regra de estorno (simples)
+
     double valorEstorno = ingresso.getValorPago();
 
     return new CancelarIngressoResponse(
@@ -99,4 +101,42 @@ public CancelarIngressoResponse cancelar(CancelarIngressoRequest request) {
             valorEstorno,
             "CANCELADO"
     );
+}
+
+
+public List<ListarIngressosResponse> listarIngressosPorUsuario(Long usuarioId) {
+
+    List<Ingresso> ingressos = ingressoRepository.buscarPorUsuarioId(usuarioId);
+
+    return ingressos.stream()
+            .sorted(Comparator
+                    .comparing((Ingresso i) -> prioridade(i))
+                    .thenComparing(i -> i.getEvento().getDataInicio())
+                    .thenComparing(i -> i.getEvento().getNome())
+            )
+            .map(i -> new ListarIngressosResponse(
+                    i.getId(),
+                    i.getEvento().getNome(),
+                    i.getEvento().getDataInicio(),
+                    i.getStatus()
+            ))
+            .collect(Collectors.toList());
+}
+
+private int prioridade(Ingresso ingresso) {
+
+    boolean eventoAtivo = ingresso.getEvento().estaAtivo();
+    boolean eventoFuturo = ingresso.getEvento()
+            .getDataInicio()
+            .isAfter(LocalDateTime.now());
+
+    boolean ingressoCancelado = ingresso.getStatus() == StatusIngresso.CANCELADO;
+
+    // Prioridade 0 → aparece primeiro
+    if (eventoAtivo && eventoFuturo && !ingressoCancelado) {
+        return 0;
+    }
+
+    // Prioridade 1 → aparece depois
+    return 1;
 }
