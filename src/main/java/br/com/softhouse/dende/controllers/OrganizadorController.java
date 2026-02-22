@@ -3,10 +3,7 @@ package br.com.softhouse.dende.controllers;
 import br.com.dende.softhouse.annotations.Controller;
 import br.com.dende.softhouse.annotations.request.*;
 import br.com.dende.softhouse.process.route.ResponseEntity;
-import br.com.softhouse.dende.dto.AtualizarEventoRequest;
-import br.com.softhouse.dende.dto.Erro;
-import br.com.softhouse.dende.dto.ReativarUsuarioRequest;
-import br.com.softhouse.dende.dto.OrganizadorPerfilResponse;
+import br.com.softhouse.dende.dto.*;
 import br.com.softhouse.dende.model.Empresa;
 import br.com.softhouse.dende.model.Evento;
 import br.com.softhouse.dende.model.Organizador;
@@ -14,7 +11,10 @@ import br.com.softhouse.dende.model.Usuario;
 import br.com.softhouse.dende.repositories.EventoRepositorio;
 import br.com.softhouse.dende.repositories.OrganizadorRepositorio;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping(path = "/organizadores")
@@ -188,5 +188,27 @@ public class OrganizadorController {
         organizadorExiste.setIsAtivo(true);
 
         return ResponseEntity.ok("Usuário reativado com sucesso.");
+    }
+
+    @GetMapping(path = "/{organizadorId}/eventos")
+    public ResponseEntity<Object> listarEventosDoOrganizador(@PathVariable(parameter = "organizadorId") long organizadorId) {
+
+        Organizador organizadorExiste = this.organizadorRepositorio.buscarOrganizadorPorId(organizadorId);
+
+        if (organizadorExiste == null) {
+            return ResponseEntity.status(404, new Erro("Organizador não encontrado."));
+        }
+
+        List<Evento> eventosDoOrganizador = this.eventoRepositorio.buscarEventosPorOrganizador(organizadorId);
+
+        if (eventosDoOrganizador.isEmpty()) {
+            return ResponseEntity.ok(Collections.emptyList());
+        }
+
+        List<EventoListagemResponse> response = eventosDoOrganizador.stream()
+                .map(EventoListagemResponse::new)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(response);
     }
 }

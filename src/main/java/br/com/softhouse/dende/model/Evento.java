@@ -8,6 +8,7 @@ public class Evento {
     private String paginaWeb;
     private LocalDateTime dataInicio;
     private LocalDateTime dataFim;
+    private String local;
     private TipoEvento tipoEvento;
     private long organizadorId;
     private Evento eventoPrincipal;
@@ -23,6 +24,7 @@ public class Evento {
                   String paginaWeb,
                   LocalDateTime dataInicio,
                   LocalDateTime dataFim,
+                  String local,
                   TipoEvento tipoEvento, long organizadorId,
                   Evento eventoPrincipal,
                   Double precoUnitarioIngresso,
@@ -33,6 +35,7 @@ public class Evento {
         this.paginaWeb = paginaWeb;
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
+        this.local = local;
         this.tipoEvento = tipoEvento;
         this.organizadorId = organizadorId;
         this.eventoPrincipal = eventoPrincipal;
@@ -73,6 +76,10 @@ public class Evento {
     public void setDataFim(LocalDateTime dataFim) {
         this.dataFim = dataFim;
     }
+
+    public String getLocal() { return local; }
+
+    public void setLocal(String local) { this.local = local; }
 
     public TipoEvento getTipoEvento() {
         return tipoEvento;

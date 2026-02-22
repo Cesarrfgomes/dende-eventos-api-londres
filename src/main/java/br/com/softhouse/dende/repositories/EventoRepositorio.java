@@ -5,7 +5,9 @@ import br.com.softhouse.dende.model.Evento;
 import br.com.softhouse.dende.model.Organizador;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class EventoRepositorio {
 
@@ -32,6 +34,12 @@ public class EventoRepositorio {
         eventos.put(evento.getId(), evento);
 
         return  evento;
+    }
+
+    public List<Evento> buscarEventosPorOrganizador(Long organizadorId) {
+        return this.eventos.values().stream()
+                .filter(evento -> evento.getOrganizadorId() == organizadorId)
+                .collect(Collectors.toList());
     }
 
     public void atualizarEvento(Long eventoId, Evento evento) {

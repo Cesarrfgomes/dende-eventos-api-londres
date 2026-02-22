@@ -52,7 +52,7 @@ Este projeto depende do framework educacional:
 2. Rodrigo Souza Guimarães
 3. Lucas Ferreira Lan
 4. Valnei Sousa
-5. ____________________________________
+5. Italo Yan Mendes da Silva
 
 ---
 
