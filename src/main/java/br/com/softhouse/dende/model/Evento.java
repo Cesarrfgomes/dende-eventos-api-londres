@@ -26,32 +26,106 @@ public class Evento {
         this.ingressosVendidos = 0;
     }
 
-    public Evento(String nome,
-                  String paginaWeb,
-                  LocalDateTime dataInicio,
-                  LocalDateTime dataFim,
-                  String local,
-                  TipoEvento tipoEvento, long organizadorId,
-                  Evento eventoPrincipal,
-                  Double precoUnitarioIngresso,
-                  Double taxaCancelamento,
-                  Integer ingressosVendidos,
-                  Integer capacidadeMaxima) {
+   public static Builder builder(){
+        return new Builder();
+   }
 
-        this.nome = nome;
-        this.paginaWeb = paginaWeb;
-        this.dataInicio = dataInicio;
-        this.dataFim = dataFim;
-        this.local = local;
-        this.tipoEvento = tipoEvento;
-        this.organizadorId = organizadorId;
-        this.eventoPrincipal = eventoPrincipal;
-        this.precoUnitarioIngresso = precoUnitarioIngresso;
-        this.taxaCancelamento = taxaCancelamento;
-        this.capacidadeMaxima = capacidadeMaxima;
-        this.ingressosVendidos = ingressosVendidos;
-        this.isAtivo = true;
-    }
+   public static class Builder {
+        private final Evento evento;
+
+        private Builder() {
+            this.evento = new Evento();
+        }
+
+        public Builder id(Long id) {
+            evento.id = id;
+            return this;
+        }
+
+       public Builder nome(String nome) {
+           evento.nome = nome;
+           return this;
+       }
+
+       public Builder paginaWeb(String paginaWeb) {
+           evento.paginaWeb = paginaWeb;
+           return this;
+       }
+
+       public Builder dataInicio(LocalDateTime dataInicio) {
+           evento.dataInicio = dataInicio;
+           return this;
+       }
+
+       public Builder dataFim(LocalDateTime dataFim) {
+           evento.dataFim = dataFim;
+           return this;
+       }
+
+       public Builder local(String local) {
+           evento.local = local;
+           return this;
+       }
+
+       public Builder tipoEvento(TipoEvento tipoEvento) {
+           evento.tipoEvento = tipoEvento;
+           return this;
+       }
+
+       public Builder organizadorId(long organizadorId) {
+           evento.organizadorId = organizadorId;
+           return this;
+       }
+
+       public Builder eventoPrincipal(Evento eventoPrincipal) {
+           evento.eventoPrincipal = eventoPrincipal;
+           return this;
+       }
+
+       public Builder precoUnitarioIngresso(Double precoUnitarioIngresso) {
+           evento.precoUnitarioIngresso = precoUnitarioIngresso;
+           return this;
+       }
+
+       public Builder taxaCancelamento(Double taxaCancelamento) {
+           evento.taxaCancelamento = taxaCancelamento;
+           return this;
+       }
+
+       public Builder capacidadeMaxima(Integer capacidadeMaxima) {
+           evento.capacidadeMaxima = capacidadeMaxima;
+           return this;
+       }
+
+       public Builder ingressosVendidos(Integer ingressosVendidos) {
+           evento.ingressosVendidos = ingressosVendidos;
+           return this;
+       }
+
+       public Builder isAtivo(Boolean isAtivo) {
+           evento.isAtivo = isAtivo;
+           return this;
+       }
+
+       public Builder eventoVinculado(Evento eventoVinculado) {
+           evento.eventoVinculado = eventoVinculado;
+           return this;
+       }
+
+       public Builder quantidadeIngressosDisponiveis(int quantidadeIngressosDisponiveis) {
+           evento.quantidadeIngressosDisponiveis = quantidadeIngressosDisponiveis;
+           return this;
+       }
+
+       public Builder valorIngresso(double valorIngresso) {
+           evento.valorIngresso = valorIngresso;
+           return this;
+       }
+
+       public Evento build() {
+           return evento;
+       }
+   }
 
     public String getNome() {
         return nome;
