@@ -36,4 +36,34 @@ public class EventoService {
         return this.eventoRepositorio.cadastrarEvento(evento);
     }
 
+    public Evento ativarEvento(long organizadorId, long eventoId) {
+
+        Evento evento = this.eventoRepositorio.buscarEventoPorId(eventoId);
+
+        if (evento.getOrganizadorId() != organizadorId) {
+            throw new RuntimeException("Usuário sem permissão para alterar este evento.");
+        }
+
+        evento.setIsAtivo(true);
+
+        this.eventoRepositorio.atualizarEvento(eventoId, evento);
+
+        return evento;
+    }
+
+    public Evento cancelarEvento(long organizadorId, long eventoId) {
+
+        Evento evento = this.eventoRepositorio.buscarEventoPorId(eventoId);
+
+        if (evento.getOrganizadorId() != organizadorId) {
+            throw new RuntimeException("Usuário sem permissão para alterar este evento.");
+        }
+
+        evento.setIsAtivo(false);
+
+        this.eventoRepositorio.atualizarEvento(eventoId, evento);
+
+        return evento;
+    }
+
 }

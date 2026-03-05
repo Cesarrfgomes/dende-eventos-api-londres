@@ -117,10 +117,7 @@ public class OrganizadorController {
     @PatchMapping(path = "/{organizadorId}/eventos/{eventoId}/ativar")
     public ResponseEntity<Object> ativarEvento(@PathVariable(parameter = "organizadorId") long organizadorId, @PathVariable(parameter = "eventoId") long eventoId) {
         try {
-            Evento evento = this.eventoRepositorio.buscarEventoPorId(eventoId);
-
-            evento.setIsAtivo(true);
-            this.eventoRepositorio.atualizarEvento(eventoId, evento);
+            Evento evento = eventoService.ativarEvento(organizadorId, eventoId);
 
             return ResponseEntity.ok(evento);
         } catch (NotFoundException e) {
@@ -133,10 +130,7 @@ public class OrganizadorController {
     @PatchMapping(path = "/{organizadorId}/eventos/{eventoId}/desativar")
     public ResponseEntity<Object> desativarEvento(@PathVariable(parameter = "organizadorId") long organizadorId, @PathVariable(parameter = "eventoId") long eventoId) {
         try {
-            Evento evento = this.eventoRepositorio.buscarEventoPorId(eventoId);
-
-            evento.setIsAtivo(false);
-            this.eventoRepositorio.atualizarEvento(eventoId, evento);
+            Evento evento = eventoService.cancelarEvento(organizadorId, eventoId);
 
             return ResponseEntity.ok(evento);
         } catch (NotFoundException e) {
