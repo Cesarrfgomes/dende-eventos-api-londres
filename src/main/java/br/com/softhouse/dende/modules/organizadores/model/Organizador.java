@@ -14,8 +14,8 @@ public class Organizador {
     private String email;
     private Empresa empresa;
     private String senha;
-    private Boolean isAtivo;
-    private Boolean hasEvento;
+    private Boolean isAtivo = true;
+    private Boolean hasEvento = false;
 
     public Organizador(String nome, LocalDate dataNascimento, String sexo, String email, Empresa empresa, String senha) {
         this.nome = nome;
@@ -63,9 +63,13 @@ public class Organizador {
         this.email = email;
     }
 
-    public Empresa getEmpresa(){return empresa;}
+    public Empresa getEmpresa() {
+        return empresa;
+    }
 
-    public void setempresa(Empresa empresa){this.empresa = empresa;}
+    public void setempresa(Empresa empresa) {
+        this.empresa = empresa;
+    }
 
     public void setSenha(String senha) {
         this.senha = senha;
@@ -83,11 +87,17 @@ public class Organizador {
         return this.senha;
     }
 
-    public void setIsAtivo(Boolean isAtivo) { this.isAtivo = isAtivo; }
+    public void setIsAtivo(Boolean isAtivo) {
+        this.isAtivo = isAtivo;
+    }
 
-    public Boolean getIsAtivo() { return this.isAtivo; }
+    public Boolean getIsAtivo() {
+        return this.isAtivo;
+    }
 
-    public Boolean getHasEvento() {return this.hasEvento;}
+    public Boolean getHasEvento() {
+        return this.hasEvento;
+    }
 
     @Override
     public boolean equals(Object object) {

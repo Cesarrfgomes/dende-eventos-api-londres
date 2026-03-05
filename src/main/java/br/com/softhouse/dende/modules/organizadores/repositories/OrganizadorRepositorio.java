@@ -23,31 +23,11 @@ public class OrganizadorRepositorio {
         return instance;
     }
 
-    public Organizador buscarOrganizadorPorId(Long id) throws NotFoundException {
-        var organizador = organizadores.get(id);
-
-        if (organizador == null) {
-            throw new NotFoundException("organizador nao encontrado");
-        }
-
-        return organizador;
+    public Organizador buscarOrganizadorPorId(Long id) {
+        return organizadores.get(id);
     }
 
     public Organizador cadastrarOrganizador(Organizador organizador) {
-        var organizadorExiste = this.buscarOrganizadorPorEmail(organizador.getEmail());
-
-        if (organizadorExiste != null) {
-            throw new BadRequestException("E-mail em uso por outro usuário");
-        }
-
-        if (
-                (organizador.getEmpresa().getCnpj() != null && (organizador.getEmpresa().getNomeFantasia() == null || organizador.getEmpresa().getRazaoSocial() == null)) ||
-                        (organizador.getEmpresa().getNomeFantasia() != null && (organizador.getEmpresa().getCnpj() == null || organizador.getEmpresa().getRazaoSocial() == null)) ||
-                        (organizador.getEmpresa().getRazaoSocial() != null && (organizador.getEmpresa().getNomeFantasia() == null || organizador.getEmpresa().getCnpj() == null))
-        ) {
-            throw new BadRequestException("Ao informar o CNPj, é necessário informar os campos: Nome Fantasia e Razão Social");
-        }
-
         if (organizador.getId() == null) {
             organizador.setId(this.contadorId);
             this.contadorId++;
@@ -58,16 +38,8 @@ public class OrganizadorRepositorio {
         return organizador;
     }
 
-    public Organizador atualizarOrganizador(Long organizadorId, Organizador organizadorAtualizado) {
-        var organizador = this.buscarOrganizadorPorId(organizadorId);
-
-        if (!Objects.equals(organizador.getEmail(), organizadorAtualizado.getEmail())) {
-            throw new BadRequestException("O e-mail não pode ser alterado");
-        }
-
-        this.organizadores.replace(organizadorId, organizador);
-
-        return organizador;
+    public void atualizarOrganizador(Long organizadorId, Organizador organizadorAtual, Organizador organizadorAtualizado) {
+        this.organizadores.replace(organizadorId, organizadorAtual, organizadorAtualizado);
     }
 
     public Organizador buscarOrganizadorPorEmail(String email) {

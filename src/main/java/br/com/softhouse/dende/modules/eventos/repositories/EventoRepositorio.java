@@ -63,12 +63,6 @@ public class EventoRepositorio {
     }
 
     public Evento buscarEventoPorId(Long eventoId) {
-        var evento =  this.eventos.get(eventoId);
-
-        if (evento == null) {
-            throw new NotFoundException("Evento não encontrado");
-        }
-
-        return  evento;
+       return   this.eventos.get(eventoId);
     }
 }

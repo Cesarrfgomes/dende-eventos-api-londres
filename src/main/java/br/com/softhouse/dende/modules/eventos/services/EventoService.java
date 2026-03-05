@@ -1,24 +1,41 @@
 package br.com.softhouse.dende.modules.eventos.services;
 
+import br.com.softhouse.dende.exceptions.NotFoundException;
 import br.com.softhouse.dende.modules.eventos.dto.CriarEventoRequestDTO;
 import br.com.softhouse.dende.modules.eventos.model.Evento;
 import br.com.softhouse.dende.modules.eventos.repositories.EventoRepositorio;
-import br.com.softhouse.dende.modules.organizadores.model.Organizador;
-import br.com.softhouse.dende.modules.organizadores.repositories.OrganizadorRepositorio;
+import br.com.softhouse.dende.modules.organizadores.dto.OrganizadorDTO;
+import br.com.softhouse.dende.modules.organizadores.services.OrganizadorService;
+
+import java.util.List;
 
 public class EventoService {
 
-    private final OrganizadorRepositorio organizadorRepositorio;
     private final EventoRepositorio eventoRepositorio;
+    private final OrganizadorService organizadorService;
 
     public EventoService() {
-        this.organizadorRepositorio = OrganizadorRepositorio.getInstance();
         this.eventoRepositorio = EventoRepositorio.getInstance();
+        this.organizadorService = new OrganizadorService();
+    }
+
+    public Evento buscarEventoPorId(Long id) {
+        var evento = this.eventoRepositorio.buscarEventoPorId(id);
+
+        if (evento == null) {
+            throw new NotFoundException("Evento não encontrado");
+        }
+
+        return evento;
+    }
+
+    public List<Evento> buscarEventosPorOrganizadorId(Long organizadorId) {
+        return this.eventoRepositorio.buscarEventosPorOrganizador(organizadorId);
     }
 
     public Evento criarEvento(long organizadorId, CriarEventoRequestDTO dto) {
 
-        Organizador organizador = this.organizadorRepositorio.buscarOrganizadorPorId(organizadorId);
+        OrganizadorDTO organizadorDTO = this.organizadorService.buscarOrganizadorPorId(organizadorId);
 
         Evento evento = Evento.builder()
                 .nome(dto.nome())
@@ -27,7 +44,7 @@ public class EventoService {
                 .dataFim(dto.dataFim())
                 .local(dto.local())
                 .tipoEvento(dto.tipoEvento())
-                .organizadorId(organizadorId)
+                .organizadorId(organizadorDTO.id())
                 .precoUnitarioIngresso(dto.precoUnitarioIngresso())
                 .taxaCancelamento(dto.taxaCancelamento())
                 .capacidadeMaxima(dto.capacidadeMaxima())
@@ -38,7 +55,7 @@ public class EventoService {
 
     public Evento ativarEvento(long organizadorId, long eventoId) {
 
-        Evento evento = this.eventoRepositorio.buscarEventoPorId(eventoId);
+        Evento evento = this.buscarEventoPorId(eventoId);
 
         if (evento.getOrganizadorId() != organizadorId) {
             throw new RuntimeException("Usuário sem permissão para alterar este evento.");
@@ -53,7 +70,7 @@ public class EventoService {
 
     public Evento cancelarEvento(long organizadorId, long eventoId) {
 
-        Evento evento = this.eventoRepositorio.buscarEventoPorId(eventoId);
+        Evento evento = this.buscarEventoPorId(eventoId);
 
         if (evento.getOrganizadorId() != organizadorId) {
             throw new RuntimeException("Usuário sem permissão para alterar este evento.");

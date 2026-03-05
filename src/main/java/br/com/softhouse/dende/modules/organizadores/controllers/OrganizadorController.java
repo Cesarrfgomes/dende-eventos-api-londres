@@ -11,10 +11,11 @@ import br.com.softhouse.dende.modules.eventos.dto.CriarEventoRequestDTO;
 import br.com.softhouse.dende.modules.eventos.dto.EventoListagemResponseDTO;
 import br.com.softhouse.dende.modules.eventos.model.Evento;
 import br.com.softhouse.dende.modules.eventos.services.EventoService;
-import br.com.softhouse.dende.modules.organizadores.dto.OrganizadorPerfilResponseDTO;
+import br.com.softhouse.dende.modules.organizadores.dto.OrganizadorDTO;
 import br.com.softhouse.dende.modules.organizadores.model.Organizador;
 import br.com.softhouse.dende.modules.eventos.repositories.EventoRepositorio;
 import br.com.softhouse.dende.modules.organizadores.repositories.OrganizadorRepositorio;
+import br.com.softhouse.dende.modules.organizadores.services.OrganizadorService;
 import br.com.softhouse.dende.modules.usuarios.dto.ReativarUsuarioRequestDTO;
 
 import java.util.Collections;
@@ -26,21 +27,21 @@ import java.util.stream.Collectors;
 public class OrganizadorController {
 
     private final OrganizadorRepositorio organizadorRepositorio;
+    private final OrganizadorService organizadorService;
     private final EventoRepositorio eventoRepositorio;
     private final EventoService eventoService;
 
     public OrganizadorController() {
         this.organizadorRepositorio = OrganizadorRepositorio.getInstance();
         this.eventoRepositorio = EventoRepositorio.getInstance();
+        this.organizadorService = new OrganizadorService();
         this.eventoService = new EventoService();
     }
 
     @PostMapping
     public ResponseEntity<Object> cadastrarOrganizador(@RequestBody Organizador organizador) {
         try {
-            Organizador organizadorExiste = this.organizadorRepositorio.buscarOrganizadorPorEmail(organizador.getEmail());
-
-            var novoOrganizador = this.organizadorRepositorio.cadastrarOrganizador(organizador);
+            var novoOrganizador = this.organizadorService.cadastrarOrganizador(organizador);
 
             return ResponseEntity.status(201, novoOrganizador);
         } catch (BadRequestException e) {
@@ -53,7 +54,7 @@ public class OrganizadorController {
     @PutMapping(path = "/{organizadorId}")
     public ResponseEntity<Object> atualizarOrganizador(@PathVariable(parameter = "organizadorId") Long organizadorId, @RequestBody Organizador organizador) {
         try {
-            this.organizadorRepositorio.atualizarOrganizador(organizadorId, organizador);
+            this.organizadorService .atualizarOrganizador(organizadorId, organizador);
 
             return ResponseEntity.status(204, null);
         } catch (NotFoundException e) {
@@ -68,11 +69,9 @@ public class OrganizadorController {
     @GetMapping(path = "/{organizadorId}")
     public ResponseEntity<Object> visualizarPerfil(@PathVariable(parameter = "organizadorId") long organizadorId) {
         try {
-            Organizador organizadorExiste = this.organizadorRepositorio.buscarOrganizadorPorId(organizadorId);
+            OrganizadorDTO organizadorDTO = this.organizadorService.buscarOrganizadorPorId(organizadorId);
 
-            OrganizadorPerfilResponseDTO response = new OrganizadorPerfilResponseDTO(organizadorExiste);
-
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(organizadorDTO);
         } catch (NotFoundException e) {
             return ResponseEntity.status(404, new ErroDTO(e.getMessage()));
         } catch (Exception e) {
@@ -84,7 +83,7 @@ public class OrganizadorController {
     public ResponseEntity<Object> cadastrarEvento(@PathVariable(parameter = "organizadorId") long organizadorId, @RequestBody CriarEventoRequestDTO dto) {
         try {
 
-            Evento novoEnvento = eventoService.criarEvento(organizadorId, dto);
+            Evento novoEnvento = this.eventoService.criarEvento(organizadorId, dto);
 
             return ResponseEntity.status(201, novoEnvento);
         } catch (NotFoundException e) {
@@ -98,7 +97,7 @@ public class OrganizadorController {
     public ResponseEntity<Object> atualizarEvento(@PathVariable(parameter = "organizadorId") long organizadorId, @PathVariable(parameter = "eventoId") long eventoId, @RequestBody AtualizarEventoRequestDTO evento) {
 
         try {
-            Evento eventoExiste = this.eventoRepositorio.buscarEventoPorId(eventoId);
+            Evento eventoExiste = this.eventoService.buscarEventoPorId(eventoId);
 
             if (eventoExiste.getOrganizadorId() != organizadorId) {
                 return ResponseEntity.status(401, new ErroDTO("Usuário sem permissão para alterar o evento."));
@@ -117,7 +116,7 @@ public class OrganizadorController {
     @PatchMapping(path = "/{organizadorId}/eventos/{eventoId}/ativar")
     public ResponseEntity<Object> ativarEvento(@PathVariable(parameter = "organizadorId") long organizadorId, @PathVariable(parameter = "eventoId") long eventoId) {
         try {
-            Evento evento = eventoService.ativarEvento(organizadorId, eventoId);
+            Evento evento = this.eventoService.ativarEvento(organizadorId, eventoId);
 
             return ResponseEntity.ok(evento);
         } catch (NotFoundException e) {
@@ -130,7 +129,7 @@ public class OrganizadorController {
     @PatchMapping(path = "/{organizadorId}/eventos/{eventoId}/desativar")
     public ResponseEntity<Object> desativarEvento(@PathVariable(parameter = "organizadorId") long organizadorId, @PathVariable(parameter = "eventoId") long eventoId) {
         try {
-            Evento evento = eventoService.cancelarEvento(organizadorId, eventoId);
+            Evento evento = this.eventoService.cancelarEvento(organizadorId, eventoId);
 
             return ResponseEntity.ok(evento);
         } catch (NotFoundException e) {
@@ -144,22 +143,14 @@ public class OrganizadorController {
     @PutMapping(path = "/{organizadorId}/desativar")
     public ResponseEntity<String> desativarOrganizador(@PathVariable(parameter = "organizadorId") long organizadorId) {
         try {
-            Organizador organizadorExiste = this.organizadorRepositorio.buscarOrganizadorPorId(organizadorId);
-
-            if (Boolean.FALSE.equals(organizadorExiste.getIsAtivo())) {
-                return ResponseEntity.status(400, "Usuário já está inativo.");
-            }
-
-            if (Boolean.TRUE.equals(organizadorExiste.getHasEvento())) {
-                return ResponseEntity.status(400, "O organizador tem evento ativo ou em execução.");
-            }
-
-            organizadorExiste.setIsAtivo(false);
+             this.organizadorService.desativarOrganizador(organizadorId);
 
             return ResponseEntity.status(204, null);
         } catch (NotFoundException e) {
             return ResponseEntity.status(404, e.getMessage());
-        } catch (Exception e) {
+        } catch (BadRequestException e){
+            return ResponseEntity.status(400, e.getMessage());
+        }  catch (Exception e) {
             return ResponseEntity.status(500, e.getMessage());
         }
     }
@@ -195,9 +186,9 @@ public class OrganizadorController {
     @GetMapping(path = "/{organizadorId}/eventos")
     public ResponseEntity<Object> listarEventosDoOrganizador(@PathVariable(parameter = "organizadorId") long organizadorId) {
         try {
-            Organizador organizadorExiste = this.organizadorRepositorio.buscarOrganizadorPorId(organizadorId);
+            OrganizadorDTO organizadorExiste = this.organizadorService.buscarOrganizadorPorId(organizadorId);
 
-            List<Evento> eventosDoOrganizador = this.eventoRepositorio.buscarEventosPorOrganizador(organizadorId);
+            List<Evento> eventosDoOrganizador = this.eventoRepositorio.buscarEventosPorOrganizador(organizadorExiste.id());
 
             if (eventosDoOrganizador.isEmpty()) {
                 return ResponseEntity.ok(Collections.emptyList());
