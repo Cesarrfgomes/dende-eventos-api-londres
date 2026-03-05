@@ -7,8 +7,10 @@ import br.com.softhouse.dende.exceptions.BadRequestException;
 import br.com.softhouse.dende.exceptions.ErroDTO;
 import br.com.softhouse.dende.exceptions.NotFoundException;
 import br.com.softhouse.dende.modules.eventos.dto.AtualizarEventoRequestDTO;
+import br.com.softhouse.dende.modules.eventos.dto.CriarEventoRequestDTO;
 import br.com.softhouse.dende.modules.eventos.dto.EventoListagemResponseDTO;
 import br.com.softhouse.dende.modules.eventos.model.Evento;
+import br.com.softhouse.dende.modules.eventos.services.EventoService;
 import br.com.softhouse.dende.modules.organizadores.dto.OrganizadorPerfilResponseDTO;
 import br.com.softhouse.dende.modules.organizadores.model.Organizador;
 import br.com.softhouse.dende.modules.eventos.repositories.EventoRepositorio;
@@ -24,12 +26,13 @@ import java.util.stream.Collectors;
 public class OrganizadorController {
 
     private final OrganizadorRepositorio organizadorRepositorio;
-
     private final EventoRepositorio eventoRepositorio;
+    private final EventoService eventoService;
 
     public OrganizadorController() {
         this.organizadorRepositorio = OrganizadorRepositorio.getInstance();
         this.eventoRepositorio = EventoRepositorio.getInstance();
+        this.eventoService = new EventoService();
     }
 
     @PostMapping
@@ -78,13 +81,10 @@ public class OrganizadorController {
     }
 
     @PostMapping(path = "/{organizadorId}/eventos")
-    public ResponseEntity<Object> cadastrarEvento(@PathVariable(parameter = "organizadorId") long organizadorId, @RequestBody Evento evento) {
+    public ResponseEntity<Object> cadastrarEvento(@PathVariable(parameter = "organizadorId") long organizadorId, @RequestBody CriarEventoRequestDTO dto) {
         try {
-            Organizador organizador = this.organizadorRepositorio.buscarOrganizadorPorId(organizadorId);
 
-            evento.setOrganizadorId(organizadorId);
-
-            Evento novoEnvento = this.eventoRepositorio.cadastrarEvento(evento);
+            Evento novoEnvento = eventoService.criarEvento(organizadorId, dto);
 
             return ResponseEntity.status(201, novoEnvento);
         } catch (NotFoundException e) {

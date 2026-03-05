@@ -26,11 +26,12 @@ public class Evento {
         this.ingressosVendidos = 0;
     }
 
-   public static Builder builder(){
+    public static Builder builder(){
         return new Builder();
-   }
+    }
 
-   public static class Builder {
+    public static class Builder {
+
         private final Evento evento;
 
         private Builder() {
@@ -42,90 +43,125 @@ public class Evento {
             return this;
         }
 
-       public Builder nome(String nome) {
-           evento.nome = nome;
-           return this;
-       }
+        public Builder nome(String nome) {
+            evento.nome = nome;
+            return this;
+        }
 
-       public Builder paginaWeb(String paginaWeb) {
-           evento.paginaWeb = paginaWeb;
-           return this;
-       }
+        public Builder paginaWeb(String paginaWeb) {
+            evento.paginaWeb = paginaWeb;
+            return this;
+        }
 
-       public Builder dataInicio(LocalDateTime dataInicio) {
-           evento.dataInicio = dataInicio;
-           return this;
-       }
+        public Builder dataInicio(LocalDateTime dataInicio) {
+            evento.dataInicio = dataInicio;
+            return this;
+        }
 
-       public Builder dataFim(LocalDateTime dataFim) {
-           evento.dataFim = dataFim;
-           return this;
-       }
+        public Builder dataFim(LocalDateTime dataFim) {
+            evento.dataFim = dataFim;
+            return this;
+        }
 
-       public Builder local(String local) {
-           evento.local = local;
-           return this;
-       }
+        public Builder local(String local) {
+            evento.local = local;
+            return this;
+        }
 
-       public Builder tipoEvento(TipoEvento tipoEvento) {
-           evento.tipoEvento = tipoEvento;
-           return this;
-       }
+        public Builder tipoEvento(TipoEvento tipoEvento) {
+            evento.tipoEvento = tipoEvento;
+            return this;
+        }
 
-       public Builder organizadorId(long organizadorId) {
-           evento.organizadorId = organizadorId;
-           return this;
-       }
+        public Builder organizadorId(long organizadorId) {
+            evento.organizadorId = organizadorId;
+            return this;
+        }
 
-       public Builder eventoPrincipal(Evento eventoPrincipal) {
-           evento.eventoPrincipal = eventoPrincipal;
-           return this;
-       }
+        public Builder eventoPrincipal(Evento eventoPrincipal) {
+            evento.eventoPrincipal = eventoPrincipal;
+            return this;
+        }
 
-       public Builder precoUnitarioIngresso(Double precoUnitarioIngresso) {
-           evento.precoUnitarioIngresso = precoUnitarioIngresso;
-           return this;
-       }
+        public Builder precoUnitarioIngresso(Double precoUnitarioIngresso) {
+            evento.precoUnitarioIngresso = precoUnitarioIngresso;
+            return this;
+        }
 
-       public Builder taxaCancelamento(Double taxaCancelamento) {
-           evento.taxaCancelamento = taxaCancelamento;
-           return this;
-       }
+        public Builder taxaCancelamento(Double taxaCancelamento) {
+            evento.taxaCancelamento = taxaCancelamento;
+            return this;
+        }
 
-       public Builder capacidadeMaxima(Integer capacidadeMaxima) {
-           evento.capacidadeMaxima = capacidadeMaxima;
-           return this;
-       }
+        public Builder capacidadeMaxima(Integer capacidadeMaxima) {
+            evento.capacidadeMaxima = capacidadeMaxima;
+            return this;
+        }
 
-       public Builder ingressosVendidos(Integer ingressosVendidos) {
-           evento.ingressosVendidos = ingressosVendidos;
-           return this;
-       }
+        public Builder ingressosVendidos(Integer ingressosVendidos) {
+            evento.ingressosVendidos = ingressosVendidos;
+            return this;
+        }
 
-       public Builder isAtivo(Boolean isAtivo) {
-           evento.isAtivo = isAtivo;
-           return this;
-       }
+        public Builder isAtivo(Boolean isAtivo) {
+            evento.isAtivo = isAtivo;
+            return this;
+        }
 
-       public Builder eventoVinculado(Evento eventoVinculado) {
-           evento.eventoVinculado = eventoVinculado;
-           return this;
-       }
+        public Builder eventoVinculado(Evento eventoVinculado) {
+            evento.eventoVinculado = eventoVinculado;
+            return this;
+        }
 
-       public Builder quantidadeIngressosDisponiveis(int quantidadeIngressosDisponiveis) {
-           evento.quantidadeIngressosDisponiveis = quantidadeIngressosDisponiveis;
-           return this;
-       }
+        public Builder quantidadeIngressosDisponiveis(int quantidadeIngressosDisponiveis) {
+            evento.quantidadeIngressosDisponiveis = quantidadeIngressosDisponiveis;
+            return this;
+        }
 
-       public Builder valorIngresso(double valorIngresso) {
-           evento.valorIngresso = valorIngresso;
-           return this;
-       }
+        public Builder valorIngresso(double valorIngresso) {
+            evento.valorIngresso = valorIngresso;
+            return this;
+        }
 
-       public Evento build() {
-           return evento;
-       }
-   }
+        public Evento build() {
+
+            if (evento.nome == null || evento.nome.isBlank()) {
+                throw new IllegalArgumentException("Nome do evento é obrigatório.");
+            }
+
+            if (evento.dataInicio == null) {
+                throw new IllegalArgumentException("Data de início é obrigatória.");
+            }
+
+            if (evento.dataFim != null && evento.dataFim.isBefore(evento.dataInicio)) {
+                throw new IllegalArgumentException("Data de fim não pode ser antes da data de início.");
+            }
+
+            if (evento.organizadorId <= 0) {
+                throw new IllegalArgumentException("OrganizadorId é obrigatório.");
+            }
+
+            if (evento.capacidadeMaxima != null && evento.capacidadeMaxima <= 0) {
+                throw new IllegalArgumentException("Capacidade máxima deve ser maior que zero.");
+            }
+
+            if (evento.precoUnitarioIngresso != null && evento.precoUnitarioIngresso < 0) {
+                throw new IllegalArgumentException("Preço do ingresso não pode ser negativo.");
+            }
+
+            if (evento.taxaCancelamento != null && evento.taxaCancelamento < 0) {
+                throw new IllegalArgumentException("Taxa de cancelamento não pode ser negativa.");
+            }
+
+            if (evento.ingressosVendidos != null && evento.capacidadeMaxima != null) {
+                if (evento.ingressosVendidos > evento.capacidadeMaxima) {
+                    throw new IllegalArgumentException("Ingressos vendidos não podem ultrapassar a capacidade máxima.");
+                }
+            }
+
+            return evento;
+        }
+    }
 
     public String getNome() {
         return nome;
