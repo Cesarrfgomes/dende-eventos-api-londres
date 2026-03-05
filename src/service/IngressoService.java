@@ -2,7 +2,7 @@ package br.com.softhouse.dende.service;
 
 import br.com.softhouse.dende.dto.*;
 import br.com.softhouse.dende.model.*;
-import br.com.softhouse.dende.repository.*;
+import br.com.softhouse.dende.repositories.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -69,74 +69,75 @@ public class IngressoService {
 
         return new CompraIngressoResponse(valorTotal, ingressosGerados);
     }
-}
 
-public CancelarIngressoResponse cancelar(CancelarIngressoRequest request) {
+    public CancelarIngressoResponse cancelar(CancelarIngressoRequest request) {
 
-    Ingresso ingresso = ingressoRepositorio.buscarPorId(request.getIngressoId());
+        Ingresso ingresso = ingressoRepositorio.buscarPorId(request.getIngressoId());
 
-    if (ingresso == null) {
-        throw new RuntimeException("Ingresso não encontrado.");
+        if (ingresso == null) {
+            throw new RuntimeException("Ingresso não encontrado.");
+        }
+
+        if (!ingresso.isAtivo()) {
+            throw new RuntimeException("Ingresso já cancelado.");
+        }
+
+        Evento evento = ingresso.getEvento();
+
+
+        ingresso.cancelar();
+
+
+        evento.setQuantidadeIngressosDisponiveis(
+                evento.getQuantidadeIngressosDisponiveis() + 1
+        );
+
+
+        double valorEstorno = ingresso.getValorPago();
+
+        return new CancelarIngressoResponse(
+                ingresso.getId(),
+                valorEstorno,
+                "CANCELADO"
+        );
     }
 
-    if (!ingresso.isAtivo()) {
-        throw new RuntimeException("Ingresso já cancelado.");
+
+    public List<ListarIngressosResponse> listarIngressosPorUsuario(Long usuarioId) {
+
+        List<Ingresso> ingressos = ingressoRepository.buscarPorUsuarioId(usuarioId);
+
+        return ingressos.stream()
+                .sorted(Comparator
+                        .comparing((Ingresso i) -> prioridade(i))
+                        .thenComparing(i -> i.getEvento().getDataInicio())
+                        .thenComparing(i -> i.getEvento().getNome())
+                )
+                .map(i -> new ListarIngressosResponse(
+                        i.getId(),
+                        i.getEvento().getNome(),
+                        i.getEvento().getDataInicio(),
+                        i.getStatus()
+                ))
+                .collect(Collectors.toList());
     }
 
-    Evento evento = ingresso.getEvento();
+    private int prioridade(Ingresso ingresso) {
 
+        boolean eventoAtivo = ingresso.getEvento().getIsAtivo();
+        boolean eventoFuturo = ingresso.getEvento()
+                .getDataInicio()
+                .isAfter(LocalDateTime.now());
 
-    ingresso.cancelar();
+        boolean ingressoCancelado = ingresso.getStatus() == StatusIngresso.CANCELADO;
 
- 
-    evento.setQuantidadeIngressosDisponiveis(
-            evento.getQuantidadeIngressosDisponiveis() + 1
-    );
+        // Prioridade 0 → aparece primeiro
+        if (eventoAtivo && eventoFuturo && !ingressoCancelado) {
+            return 0;
+        }
 
-
-    double valorEstorno = ingresso.getValorPago();
-
-    return new CancelarIngressoResponse(
-            ingresso.getId(),
-            valorEstorno,
-            "CANCELADO"
-    );
-}
-
-
-public List<ListarIngressosResponse> listarIngressosPorUsuario(Long usuarioId) {
-
-    List<Ingresso> ingressos = ingressoRepository.buscarPorUsuarioId(usuarioId);
-
-    return ingressos.stream()
-            .sorted(Comparator
-                    .comparing((Ingresso i) -> prioridade(i))
-                    .thenComparing(i -> i.getEvento().getDataInicio())
-                    .thenComparing(i -> i.getEvento().getNome())
-            )
-            .map(i -> new ListarIngressosResponse(
-                    i.getId(),
-                    i.getEvento().getNome(),
-                    i.getEvento().getDataInicio(),
-                    i.getStatus()
-            ))
-            .collect(Collectors.toList());
-}
-
-private int prioridade(Ingresso ingresso) {
-
-    boolean eventoAtivo = ingresso.getEvento().estaAtivo();
-    boolean eventoFuturo = ingresso.getEvento()
-            .getDataInicio()
-            .isAfter(LocalDateTime.now());
-
-    boolean ingressoCancelado = ingresso.getStatus() == StatusIngresso.CANCELADO;
-
-    // Prioridade 0 → aparece primeiro
-    if (eventoAtivo && eventoFuturo && !ingressoCancelado) {
-        return 0;
+        // Prioridade 1 → aparece depois
+        return 1;
     }
-
-    // Prioridade 1 → aparece depois
-    return 1;
 }
+
