@@ -1,5 +1,6 @@
 package br.com.softhouse.dende.modules.ingressos.dto;
 
+import br.com.softhouse.dende.modules.ingressos.model.StatusIngresso;
 import java.time.LocalDateTime;
 
 public class ListarIngressosResponseDTO {

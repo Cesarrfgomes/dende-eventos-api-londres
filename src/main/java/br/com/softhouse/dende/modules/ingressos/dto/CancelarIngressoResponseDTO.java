@@ -12,4 +12,27 @@ public class CancelarIngressoResponseDTO {
         this.status = status;
     }
 
+    public Long getIngressoId() {
+        return ingressoId;
+    }
+
+    public void setIngressoId(Long ingressoId) {
+        this.ingressoId = ingressoId;
+    }
+
+    public double getValorEstornado() {
+        return valorEstornado;
+    }
+
+    public void setValorEstornado(double valorEstornado) {
+        this.valorEstornado = valorEstornado;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }

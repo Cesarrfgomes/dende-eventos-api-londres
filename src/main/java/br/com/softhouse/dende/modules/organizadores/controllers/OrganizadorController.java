@@ -54,9 +54,9 @@ public class OrganizadorController {
     @PutMapping(path = "/{organizadorId}")
     public ResponseEntity<Object> atualizarOrganizador(@PathVariable(parameter = "organizadorId") Long organizadorId, @RequestBody Organizador organizador) {
         try {
-            this.organizadorService .atualizarOrganizador(organizadorId, organizador);
+            var organizadorAtualizado = this.organizadorService.atualizarOrganizador(organizadorId, organizador);
 
-            return ResponseEntity.status(204, null);
+            return ResponseEntity.status(200, organizadorAtualizado);
         } catch (NotFoundException e) {
             return ResponseEntity.status(404, new ErroDTO(e.getMessage()));
         } catch (BadRequestException e) {

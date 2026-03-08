@@ -4,6 +4,7 @@ import br.com.softhouse.dende.modules.ingressos.model.Ingresso;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class IngressoRepositorio {
 
@@ -22,6 +23,12 @@ public class IngressoRepositorio {
                 .filter(i -> i.getId().equals(id))
                 .findFirst()
                 .orElse(null);
+    }
+
+    public List<Ingresso> buscarPorUsuarioId(Long usuarioId) {
+        return ingressos.stream()
+                .filter(i -> i.getUsuario().getId().equals(usuarioId))
+                .collect(Collectors.toList());
     }
 }
 

@@ -116,7 +116,7 @@ public class IngressoService {
 
     public List<ListarIngressosResponseDTO> listarIngressosPorUsuario(Long usuarioId) {
 
-        List<Ingresso> ingressos = ingressoRepository.buscarPorUsuarioId(usuarioId);
+        List<Ingresso> ingressos = ingressoRepositorio.buscarPorUsuarioId(usuarioId);
 
         return ingressos.stream()
                 .sorted(Comparator
@@ -124,7 +124,7 @@ public class IngressoService {
                         .thenComparing(i -> i.getEvento().getDataInicio())
                         .thenComparing(i -> i.getEvento().getNome())
                 )
-                .map(i -> new ListarIngressosResponse(
+                .map(i -> new ListarIngressosResponseDTO(
                         i.getId(),
                         i.getEvento().getNome(),
                         i.getEvento().getDataInicio(),
