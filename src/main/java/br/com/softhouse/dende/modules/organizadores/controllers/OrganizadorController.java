@@ -94,16 +94,10 @@ public class OrganizadorController {
     }
 
     @PutMapping(path = "/{organizadorId}/eventos/{eventoId}")
-    public ResponseEntity<Object> atualizarEvento(@PathVariable(parameter = "organizadorId") long organizadorId, @PathVariable(parameter = "eventoId") long eventoId, @RequestBody AtualizarEventoRequestDTO evento) {
+    public ResponseEntity<Object> atualizarEvento(@PathVariable(parameter = "organizadorId") long organizadorId, @PathVariable(parameter = "eventoId") long eventoId, @RequestBody AtualizarEventoRequestDTO dto) {
 
         try {
-            Evento eventoExiste = this.eventoService.buscarEventoPorId(eventoId);
-
-            if (eventoExiste.getOrganizadorId() != organizadorId) {
-                return ResponseEntity.status(401, new ErroDTO("Usuário sem permissão para alterar o evento."));
-            }
-
-            this.eventoRepositorio.atualizarEvento(eventoId, eventoExiste);
+            this.eventoService.atualizarEvento(eventoId, organizadorId, dto);
 
             return ResponseEntity.status(204, null);
         } catch (NotFoundException e) {

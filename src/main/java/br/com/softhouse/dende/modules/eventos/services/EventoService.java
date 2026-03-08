@@ -1,13 +1,19 @@
 package br.com.softhouse.dende.modules.eventos.services;
 
+import br.com.dende.softhouse.process.route.ResponseEntity;
+import br.com.softhouse.dende.exceptions.ErroDTO;
 import br.com.softhouse.dende.exceptions.NotFoundException;
+import br.com.softhouse.dende.modules.eventos.dto.AtualizarEventoRequestDTO;
 import br.com.softhouse.dende.modules.eventos.dto.CriarEventoRequestDTO;
 import br.com.softhouse.dende.modules.eventos.model.Evento;
 import br.com.softhouse.dende.modules.eventos.repositories.EventoRepositorio;
 import br.com.softhouse.dende.modules.organizadores.dto.OrganizadorDTO;
 import br.com.softhouse.dende.modules.organizadores.services.OrganizadorService;
+import br.com.softhouse.dende.modules.usuarios.dto.AtualizarUsuarioRequestDTO;
+import br.com.softhouse.dende.modules.usuarios.model.Usuario;
 
 import java.util.List;
+import java.util.Objects;
 
 public class EventoService {
 
@@ -51,6 +57,26 @@ public class EventoService {
                 .build();
 
         return this.eventoRepositorio.cadastrarEvento(evento);
+    }
+
+    public Evento atualizarEvento(long eventoId, long organizadorId, AtualizarEventoRequestDTO dto) {
+        Evento eventoExiste = this.buscarEventoPorId(eventoId);
+
+        if (eventoExiste.getOrganizadorId() != organizadorId) {
+            throw new SecurityException("Usuário sem permissão para alterar o evento.");
+        }
+
+        eventoExiste.setNome(dto.nome());
+        eventoExiste.setPaginaWeb(dto.paginaWeb());
+        eventoExiste.setDataInicio(dto.dataInicio());
+        eventoExiste.setDataFim(dto.dataFim());
+        eventoExiste.setTipoEvento(dto.tipoEvento());
+        eventoExiste.setEventoPrincipal(dto.eventoPrincipal());
+        eventoExiste.setPrecoUnitarioIngresso(dto.precoUnitarioIngresso());
+        eventoExiste.setTaxaCancelamento(dto.taxaCancelamento());
+        eventoExiste.setCapacidadeMaxima(dto.capacidadeMaxima());
+
+        return this.eventoRepositorio.atualizarEvento(eventoId, eventoExiste);
     }
 
     public Evento ativarEvento(long organizadorId, long eventoId) {
