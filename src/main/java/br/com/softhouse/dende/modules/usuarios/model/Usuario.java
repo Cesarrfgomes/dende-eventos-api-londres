@@ -1,5 +1,7 @@
 package br.com.softhouse.dende.modules.usuarios.model;
 
+import br.com.softhouse.dende.modules.usuarios.dto.CriarUsuarioRequestDTO;
+
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -13,16 +15,11 @@ public class Usuario {
     private String senha;
     private Boolean isAtivo;
 
-    public Usuario(
-            final String nome,
-            final LocalDate dataNascimento,
-            final String sexo,
-            final String email
-    ) {
-        this.nome = nome;
-        this.dataNascimento = dataNascimento;
-        this.sexo = sexo;
-        this.email = email;
+    public Usuario(CriarUsuarioRequestDTO dto) {
+        this.nome = dto.nome();
+        this.dataNascimento = dto.dataNascimento();
+        this.sexo = dto.sexo();
+        this.email = dto.email();
         this.isAtivo = true;
     }
 

@@ -1,5 +1,6 @@
 package br.com.softhouse.dende.modules.usuarios.repositories;
 
+import br.com.softhouse.dende.modules.usuarios.dto.AtualizarUsuarioRequestDTO;
 import br.com.softhouse.dende.modules.usuarios.model.Usuario;
 
 import java.util.HashMap;
