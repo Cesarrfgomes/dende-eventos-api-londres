@@ -1,4 +1,4 @@
-package br.com.softhouse.dende.controller;
+package br.com.softhouse.dende.modules.ingressos.controllers;
 
 import br.com.softhouse.dende.modules.ingressos.dto.*;
 import br.com.softhouse.dende.modules.ingressos.services.IngressoService;

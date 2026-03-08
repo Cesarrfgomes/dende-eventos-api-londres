@@ -1,6 +1,5 @@
 package br.com.softhouse.dende.modules.organizadores.services;
 
-import br.com.dende.softhouse.process.route.ResponseEntity;
 import br.com.softhouse.dende.exceptions.BadRequestException;
 import br.com.softhouse.dende.exceptions.NotFoundException;
 import br.com.softhouse.dende.modules.organizadores.dto.OrganizadorDTO;
@@ -33,9 +32,6 @@ public class OrganizadorService {
     public OrganizadorDTO buscarOrganizadorPorEmail(String email) {
         var organizador = this.organizadorRepositorio.buscarOrganizadorPorEmail(email);
 
-        if(organizador == null) {
-            throw new NotFoundException("Organizador não encontrado");
-        }
 
         return organizadorMapper.toDto(organizador);
     }
@@ -60,7 +56,7 @@ public class OrganizadorService {
         return  organizadorMapper.toDto(novoOrganizador);
     }
 
-    public void atualizarOrganizador(Long organizadorId, Organizador organizadorAtualizado){
+    public OrganizadorDTO atualizarOrganizador(Long organizadorId, Organizador organizadorAtualizado){
         OrganizadorDTO organizadorExiste = this.buscarOrganizadorPorId(organizadorId);
 
         var organizador = this.organizadorMapper.toEntity(organizadorExiste);
@@ -69,7 +65,11 @@ public class OrganizadorService {
             throw new BadRequestException("O e-mail não pode ser alterado");
         }
 
+        organizadorAtualizado.setId(organizadorId);
+
         this.organizadorRepositorio.atualizarOrganizador(organizadorId, organizador, organizadorAtualizado);
+
+        return this.organizadorMapper.toDto(organizadorAtualizado);
     }
 
     public void desativarOrganizador(Long organizadorId) {
