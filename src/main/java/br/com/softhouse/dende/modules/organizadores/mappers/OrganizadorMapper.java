@@ -20,7 +20,7 @@ public class OrganizadorMapper {
                 organizador.getNome(),
                 organizador.getEmail(),
                 organizador.getDataNascimento(),
-                calcularIdade(organizador.getDataNascimento()),
+                this.calcularIdade(organizador.getDataNascimento()),
                 organizador.getSexo(),
                 ativo,
                 organizador.getEmpresa()
