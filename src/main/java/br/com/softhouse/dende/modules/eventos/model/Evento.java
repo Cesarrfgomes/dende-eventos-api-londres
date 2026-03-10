@@ -266,4 +266,28 @@ public class Evento {
     public void setOrganizadorId(long organizadorId) {
         this.organizadorId = organizadorId;
     }
+
+    public Evento getEventoVinculado() {
+        return eventoVinculado;
+    }
+
+    public void setEventoVinculado(Evento eventoVinculado) {
+        this.eventoVinculado = eventoVinculado;
+    }
+
+    public int getQuantidadeIngressosDisponiveis() {
+        return quantidadeIngressosDisponiveis;
+    }
+
+    public void setQuantidadeIngressosDisponiveis(int quantidadeIngressosDisponiveis) {
+        this.quantidadeIngressosDisponiveis = quantidadeIngressosDisponiveis;
+    }
+
+    public double getValorIngresso() {
+        return valorIngresso;
+    }
+
+    public void setValorIngresso(double valorIngresso) {
+        this.valorIngresso = valorIngresso;
+    }
 }
