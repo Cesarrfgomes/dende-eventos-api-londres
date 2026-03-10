@@ -1,13 +1,13 @@
 package br.com.softhouse.dende.modules.ingressos.services;
 
 import br.com.softhouse.dende.modules.eventos.model.Evento;
-import br.com.softhouse.dende.modules.eventos.repositories.EventoRepositorio;
+import br.com.softhouse.dende.modules.eventos.services.EventoService;
 import br.com.softhouse.dende.modules.ingressos.dto.*;
 import br.com.softhouse.dende.modules.ingressos.model.Ingresso;
 import br.com.softhouse.dende.modules.ingressos.model.StatusIngresso;
 import br.com.softhouse.dende.modules.ingressos.repositories.IngressoRepositorio;
 import br.com.softhouse.dende.modules.usuarios.model.Usuario;
-import br.com.softhouse.dende.modules.usuarios.repositories.UsuarioRepositorio;
+import br.com.softhouse.dende.modules.usuarios.services.UsuarioService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -18,19 +18,19 @@ import java.util.stream.Collectors;
 public class IngressoService {
 
     private final IngressoRepositorio ingressoRepositorio;
-    private final EventoRepositorio eventoRepositorio;
-    private final UsuarioRepositorio usuarioRepositorio;
+    private final EventoService eventoService;
+    private final UsuarioService usuarioService;
 
     public IngressoService() {
-        this.eventoRepositorio = EventoRepositorio.getInstance();
-        this.usuarioRepositorio = UsuarioRepositorio.getInstance();
+        this.eventoService = new EventoService();
+        this.usuarioService = new UsuarioService();
         this.ingressoRepositorio = new IngressoRepositorio();
     }
 
     public CompraIngressoResponseDTO comprar(CompraIngressoRequestDTO request) {
 
-        Evento evento = eventoRepositorio.buscarPorId(request.getEventoId());
-        Usuario usuario = usuarioRepositorio.buscarPorId(request.getUsuarioId());
+        Evento evento = eventoService.buscarEventoPorId(request.getEventoId());
+        Usuario usuario = usuarioService.buscarUsuarioPorId(request.getUsuarioId());
 
         if (evento == null || usuario == null) {
             throw new RuntimeException("Usuário ou evento não encontrado.");

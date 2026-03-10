@@ -50,12 +50,18 @@ public class UsuarioService {
         return this.usuarioRepositorio.atualizarUsuario(usuarioId, usuarioExiste);
     }
 
-    public UsuarioPerfilResponseDTO visualizarPerfil(long usuarioId) {
+    public Usuario buscarUsuarioPorId(long usuarioId) {
         Usuario usuarioExiste = this.usuarioRepositorio.buscarUsuarioPorId(usuarioId);
 
         if (usuarioExiste == null) {
-           throw new NotFoundException("Usuário não encontrado");
+            throw new NotFoundException("Usuário não encontrado");
         }
+
+        return usuarioExiste;
+    }
+
+    public UsuarioPerfilResponseDTO visualizarPerfil(long usuarioId) {
+        Usuario usuarioExiste = this.buscarUsuarioPorId(usuarioId);
 
         UsuarioPerfilResponseDTO usuarioPerfil = new UsuarioPerfilResponseDTO(usuarioExiste);
 
