@@ -4,7 +4,7 @@ import br.com.softhouse.dende.exceptions.NotFoundException;
 import br.com.softhouse.dende.modules.usuarios.dto.AtualizarUsuarioRequestDTO;
 import br.com.softhouse.dende.modules.usuarios.dto.CriarUsuarioRequestDTO;
 import br.com.softhouse.dende.modules.usuarios.dto.ReativarUsuarioRequestDTO;
-import br.com.softhouse.dende.modules.usuarios.dto.UsuarioPerfilResponseDTO;
+import br.com.softhouse.dende.modules.usuarios.dto.UsuarioDTO;
 import br.com.softhouse.dende.modules.usuarios.model.Usuario;
 import br.com.softhouse.dende.modules.usuarios.repositories.UsuarioRepositorio;
 
@@ -60,10 +60,10 @@ public class UsuarioService {
         return usuarioExiste;
     }
 
-    public UsuarioPerfilResponseDTO visualizarPerfil(long usuarioId) {
+    public UsuarioDTO visualizarPerfil(long usuarioId) {
         Usuario usuarioExiste = this.buscarUsuarioPorId(usuarioId);
 
-        UsuarioPerfilResponseDTO usuarioPerfil = new UsuarioPerfilResponseDTO(usuarioExiste);
+        UsuarioDTO usuarioPerfil = new UsuarioDTO(usuarioExiste);
 
         return usuarioPerfil;
     }
