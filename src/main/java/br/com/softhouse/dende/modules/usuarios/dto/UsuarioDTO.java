@@ -1,13 +1,16 @@
 package br.com.softhouse.dende.modules.usuarios.dto;
 
-import java.time.LocalDate;
+import br.com.softhouse.dende.modules.usuarios.model.Usuario;
 
-public record UsuarioDTO (
-        Long id,
+import java.time.LocalDate;
+import java.time.Period;
+
+public record UsuarioDTO(
+        long id,
         String nome,
-        LocalDate dataNascimento,
-        String sexo,
         String email,
-        String senha,
-        Boolean isAtivo
-){}
+        LocalDate dataNascimento,
+        String idade
+) {
+
+}

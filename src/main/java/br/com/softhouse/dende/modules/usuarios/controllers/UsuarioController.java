@@ -8,7 +8,7 @@ import br.com.softhouse.dende.modules.eventos.dto.EventoListagemResponseDTO;
 import br.com.softhouse.dende.modules.usuarios.dto.AtualizarUsuarioRequestDTO;
 import br.com.softhouse.dende.modules.usuarios.dto.CriarUsuarioRequestDTO;
 import br.com.softhouse.dende.modules.usuarios.dto.ReativarUsuarioRequestDTO;
-import br.com.softhouse.dende.modules.usuarios.dto.UsuarioPerfilResponseDTO;
+import br.com.softhouse.dende.modules.usuarios.dto.UsuarioDTO;
 import br.com.softhouse.dende.exceptions.NotFoundException;
 import br.com.softhouse.dende.modules.eventos.model.Evento;
 import br.com.softhouse.dende.modules.usuarios.model.Usuario;
@@ -53,7 +53,7 @@ public class UsuarioController {
     @GetMapping(path = "/{usuarioId}")
     public ResponseEntity<Object> visualizarPerfil(@PathVariable(parameter = "usuarioId") long usuarioId) {
 
-        UsuarioPerfilResponseDTO response = this.usuarioService.visualizarPerfil(usuarioId);
+        UsuarioDTO response = this.usuarioService.visualizarPerfil(usuarioId);
 
         return ResponseEntity.ok(response);
     }
