@@ -1,43 +1,24 @@
 package br.com.softhouse.dende.modules.usuarios.repositories;
 
-import br.com.softhouse.dende.modules.usuarios.dto.AtualizarUsuarioRequestDTO;
 import br.com.softhouse.dende.modules.usuarios.model.Usuario;
+import br.com.softhouse.dende.shared.repositories.RepositorioBase;
 
-import java.util.HashMap;
-import java.util.Map;
+public class UsuarioRepositorio extends RepositorioBase<Usuario> {
 
-public class UsuarioRepositorio {
     private static UsuarioRepositorio instance = new UsuarioRepositorio();
-    private final Map<Long, Usuario> usuariosComum;
 
-    private Long contadorId;
-
-    private UsuarioRepositorio() {
-        this.usuariosComum = new HashMap<>();
-        this.contadorId = 1L;
-    }
+    private UsuarioRepositorio() {}
 
     public static UsuarioRepositorio getInstance() {
         return instance;
     }
 
-    public Usuario buscarUsuarioPorId(Long id) {
-        return usuariosComum.get(id);
-    }
-
     public Usuario cadastrarUsuario(Usuario usuario) {
-        if (usuario.getId() == null) {
-            usuario.setId(this.contadorId);
-            this.contadorId++;
-        }
-
-        this.usuariosComum.put(usuario.getId(), usuario);
-
-        return usuario;
+        return salvar(usuario);
     }
 
     public Usuario atualizarUsuario(Long usuarioId, Usuario usuario) {
-        this.usuariosComum.replace(usuarioId, usuario);
+        entidades.replace(usuarioId, usuario);
         return usuario;
     }
 
@@ -46,7 +27,7 @@ public class UsuarioRepositorio {
             return null;
         }
 
-        return usuariosComum
+        return entidades
                 .values()
                 .stream()
                 .filter(usuario ->

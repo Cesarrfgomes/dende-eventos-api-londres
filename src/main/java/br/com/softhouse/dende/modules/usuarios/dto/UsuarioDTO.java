@@ -12,5 +12,4 @@ public record UsuarioDTO(
         LocalDate dataNascimento,
         String idade
 ) {
-
 }

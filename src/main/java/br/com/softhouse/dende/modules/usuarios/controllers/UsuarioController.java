@@ -83,7 +83,7 @@ public class UsuarioController {
     @GetMapping(path = "/{usuarioId}/feed")
     public ResponseEntity<Object> visualizarFeedEventos(@PathVariable(parameter = "usuarioId") long usuarioId) {
 
-        Usuario usuarioExiste = this.usuarioRepositorio.buscarUsuarioPorId(usuarioId);
+        Usuario usuarioExiste = this.usuarioRepositorio.buscarPorId(usuarioId);
 
         if (usuarioExiste == null) {
             return ResponseEntity.status(404, new ErroDTO("Usuário não encontrado."));

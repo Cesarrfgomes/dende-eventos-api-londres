@@ -5,6 +5,7 @@ import br.com.softhouse.dende.modules.usuarios.dto.AtualizarUsuarioRequestDTO;
 import br.com.softhouse.dende.modules.usuarios.dto.CriarUsuarioRequestDTO;
 import br.com.softhouse.dende.modules.usuarios.dto.ReativarUsuarioRequestDTO;
 import br.com.softhouse.dende.modules.usuarios.dto.UsuarioDTO;
+import br.com.softhouse.dende.modules.usuarios.mappers.UsuarioMapper;
 import br.com.softhouse.dende.modules.usuarios.model.Usuario;
 import br.com.softhouse.dende.modules.usuarios.repositories.UsuarioRepositorio;
 
@@ -13,9 +14,11 @@ import java.util.Objects;
 public class UsuarioService {
 
     private final UsuarioRepositorio usuarioRepositorio;
+    private final UsuarioMapper usuarioMapper;
 
     public UsuarioService() {
         this.usuarioRepositorio = UsuarioRepositorio.getInstance();
+        this.usuarioMapper = new UsuarioMapper();
     }
 
     public Usuario criarUsuario(CriarUsuarioRequestDTO dto) {
@@ -27,11 +30,15 @@ public class UsuarioService {
 
         Usuario usuario = new Usuario(dto);
 
-        return this.usuarioRepositorio.cadastrarUsuario(usuario);
+        var novoUsuario = this.usuarioRepositorio.cadastrarUsuario(usuario);
+
+        System.out.println(novoUsuario);
+
+        return novoUsuario;
     }
 
     public Usuario atualizarUsuario(long usuarioId, AtualizarUsuarioRequestDTO dto) {
-        Usuario usuarioExiste = this.usuarioRepositorio.buscarUsuarioPorId(usuarioId);
+        Usuario usuarioExiste = this.usuarioRepositorio.buscarPorId(usuarioId);
 
         if (usuarioExiste == null) {
             throw new NotFoundException("Usuário não encontrado");
@@ -51,7 +58,7 @@ public class UsuarioService {
     }
 
     public Usuario buscarUsuarioPorId(long usuarioId) {
-        Usuario usuarioExiste = this.usuarioRepositorio.buscarUsuarioPorId(usuarioId);
+        Usuario usuarioExiste = this.usuarioRepositorio.buscarPorId(usuarioId);
 
         if (usuarioExiste == null) {
             throw new NotFoundException("Usuário não encontrado");
@@ -63,13 +70,11 @@ public class UsuarioService {
     public UsuarioDTO visualizarPerfil(long usuarioId) {
         Usuario usuarioExiste = this.buscarUsuarioPorId(usuarioId);
 
-        UsuarioDTO usuarioPerfil = new UsuarioDTO(usuarioExiste);
-
-        return usuarioPerfil;
+        return usuarioMapper.toDto(usuarioExiste);
     }
 
     public void desativarUsuario(long usuarioId) {
-        Usuario usuarioExiste = this.usuarioRepositorio.buscarUsuarioPorId(usuarioId);
+        Usuario usuarioExiste = this.usuarioRepositorio.buscarPorId(usuarioId);
 
         if (Boolean.FALSE.equals(usuarioExiste.getIsAtivo())) {
             throw new IllegalStateException("Usuário já está inativo.");
